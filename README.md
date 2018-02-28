@@ -1,0 +1,2 @@
+# iad
+inteligentna analiza danych
