@@ -1,18 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
-#tex set up
+
+#latex set up
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex=True)
 
 #range
 plt.xlim([-3,3])
 plt.ylim([-0.5,1.5])
+
+plt.grid()
+plt.title("Rozgrzewka 1")
+
 #points
 PointsX=[-0.2, 0.4, 0.6, 1.2, 1.9, 0.5]
 PointsY=[0, 0, 1, 1, 1, 0]
 plt.scatter(PointsX,PointsY,color='black', s=10)
-plt.title("Rozgrzewka 1")
+
+#Functions
 x = np.arange(-3, 3, 0.01);
 y1 = 1/(1+np.exp(-x))
 y2 = 1/(1+np.exp(4*x))
