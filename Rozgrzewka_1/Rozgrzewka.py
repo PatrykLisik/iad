@@ -23,9 +23,9 @@ x = np.arange(-3, 3, 0.01);
 y1 = 1/(1+np.exp(-x))
 y2 = 1/(1+np.exp(4*x))
 y3 = 1/(1+np.exp(-100*(x-0.55)))
-plt.plot(x,y1,color='red', label=r"$f(x)=\frac{1}{e^{-x}}$")
-plt.plot(x,y2,color='blue',label=r"$f(x)=\frac{1}{e^{4x}}$")
-plt.plot(x,y2,color='green',label=r"$f(x)=\frac{1}{e^{-100*(x-0.55)}}$")
+plt.plot(x,y1,color='red', label=r"$f(x)=\frac{1}{1+e^{-x}}$")
+plt.plot(x,y2,color='blue',label=r"$f(x)=\frac{1}{1+e^{4x}}$")
+plt.plot(x,y3,color='green',label=r"$f(x)=\frac{1}{1+e^{-100(x-0.55)}}$")
 
 legend = plt.legend(loc='upper center',
           ncol=3, fancybox=True, shadow=True)
