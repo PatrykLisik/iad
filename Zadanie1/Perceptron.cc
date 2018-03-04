@@ -4,7 +4,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <iostream>
 #include <random>
-#define DEBUG 1
+#define DEBUG 0
 
 namespace ublas = boost::numeric::ublas;
 
@@ -21,12 +21,14 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
       biasOutput(ublas::matrix<double>(outputNodes, 1, BiasO)),
       activationFunction(aF) {
 
-  auto randomMatrix = [](ublas::matrix<double> &m, int min, int max) {
-    std::uniform_real_distribution<double> unif(min, max);
-    std::default_random_engine re;
+  auto randomMatrix = [](ublas::matrix<double> &m, double min, double max) {
+    std::random_device
+        rd; // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+    std::uniform_real_distribution<double> dis(min, max);
     for (size_t i = 0; i < m.size1(); i++)
       for (size_t j = 0; j < m.size2(); j++)
-        m(i, j) = unif(re);
+        m(i, j) = dis(gen);
   };
   randomMatrix(weigthsHiddenOutput, -1, 1);
   randomMatrix(weigthsIntputHidden, -1, 1);
