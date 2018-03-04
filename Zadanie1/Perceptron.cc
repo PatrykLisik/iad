@@ -4,7 +4,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <iostream>
 #include <random>
-#define DEBUG 0
+#define DEBUG 1
 
 namespace ublas = boost::numeric::ublas;
 
@@ -25,9 +25,9 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
         rd; // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<double> dis(min, max);
-    for (size_t i = 0; i < m.size1(); i++)
-      for (size_t j = 0; j < m.size2(); j++)
-        m(i, j) = dis(gen);
+    std::transform(m.data().begin(), m.data().end(), m.data().begin(),
+                   [&](double) { return dis(gen); });
+
   };
   randomMatrix(weigthsHiddenOutput, -1, 1);
   randomMatrix(weigthsIntputHidden, -1, 1);
@@ -42,6 +42,7 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
 Matrix MultiLayerPerceptron::output(Matrix intput) {
   // hidden output
   Matrix hidden = ublas::prod(weigthsIntputHidden, intput);
+
   if (DEBUG) {
     std::cout << "HIDDEN=weigthsIntputHidden X intput" << '\n'
               << hidden << "\n=\n"
@@ -56,23 +57,39 @@ Matrix MultiLayerPerceptron::output(Matrix intput) {
     std::cout << "=\n" << hidden << '\n';
   }
 
-  for (size_t i = 0; i < hidden.size1(); i++)
-    for (size_t j = 0; j < hidden.size2(); j++)
-      hidden(i, j) = activationFunction(hidden(i, j));
-
+  // hidden with activationFunction
+  Matrix hidden_aF = hidden;
+  std::transform(hidden_aF.data().begin(), hidden_aF.data().end(),
+                 hidden_aF.data().begin(), activationFunction);
   // bad works on copy
   // std::for_each(hidden.data().begin(), hidden.data().end(),
   // activationFunction);
+
   if (DEBUG) {
     std::cout << "HIDDEN with activationFunction applied to\n"
-              << hidden << '\n';
+              << hidden_aF << '\n';
   }
+
   // output
-  Matrix output = ublas::prod(weigthsHiddenOutput, hidden);
+  Matrix output = ublas::prod(weigthsHiddenOutput, hidden_aF);
   output += biasOutput;
-  for (size_t i = 0; i < output.size1(); i++)
-    for (size_t j = 0; j < output.size2(); j++)
-      output(i, j) = activationFunction(output(i, j));
+  std::transform(output.data().begin(), output.data().end(),
+                 output.data().begin(), activationFunction);
 
   return output;
+}
+
+void MultiLayerPerceptron::train(Matrix in, Matrix ans) {
+
+  Matrix hidden = ublas::prod(weigthsIntputHidden, in);
+  hidden += biasHidden;
+  // Conpute error matrixes
+  // ERROR=ans-output
+  Matrix out = output(in);
+  Matrix errorOutput = ans - out;
+
+  // gradient Hidden->output
+  // hiden output is what hidden layer giver to output layer
+  // hidden_output=weigthsIntputHidden X intput + biasHidden
+  // gradinet_HO=lr*E_mx X dAF(output_output) X transpose(hidden_output)
 }

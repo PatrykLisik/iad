@@ -12,13 +12,16 @@ private:
   Matrix biasHidden;
   Matrix biasOutput;
   std::function<double(double)> activationFunction; // probably sigmoid function
+  std::function<double(double)>
+      dActivationFunction; // probably derivative  sigmoid function
+  double lr = 0.1;         // learnig rate
 
 public:
   MultiLayerPerceptron(size_t intputNodes, size_t hiddenNodes,
                        size_t outputNodes, int BiasH, int BiasO,
                        std::function<double(double)> aF);
   Matrix output(Matrix intput);
-  void train(Matrix intput, Matrix output);
+  void train(Matrix intput, Matrix ans);
   virtual ~MultiLayerPerceptron() = default;
 };
 #endif /* end of include guard:MultiLayerPerceptron */
