@@ -4,19 +4,21 @@
 #include <functional>
 
 namespace ublas = boost::numeric::ublas;
+typedef ublas::matrix<double> Matrix;
 class MultiLayerPerceptron {
 private:
-  ublas::matrix<double> weigthsIntputHidden;
-  ublas::matrix<double> weigthsHiddenOutput;
-  ublas::matrix<double> biasHidden;
-  ublas::matrix<double> biasOutput;
+  Matrix weigthsIntputHidden;
+  Matrix weigthsHiddenOutput;
+  Matrix biasHidden;
+  Matrix biasOutput;
   std::function<double(double)> activationFunction; // probably sigmoid function
 
 public:
   MultiLayerPerceptron(size_t intputNodes, size_t hiddenNodes,
                        size_t outputNodes, int BiasH, int BiasO,
                        std::function<double(double)> aF);
-  ublas::matrix<double> output(ublas::matrix<double> intput);
+  Matrix output(Matrix intput);
+  void train(Matrix intput, Matrix output);
   virtual ~MultiLayerPerceptron() = default;
 };
 #endif /* end of include guard:MultiLayerPerceptron */

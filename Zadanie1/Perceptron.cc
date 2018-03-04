@@ -15,13 +15,12 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
                                            size_t outputNodes, int BiasH,
                                            int BiasO,
                                            std::function<double(double)> aF)
-    : weigthsIntputHidden(ublas::matrix<double>(hiddenNodes, intputNodes)),
-      weigthsHiddenOutput(ublas::matrix<double>(outputNodes, hiddenNodes)),
-      biasHidden(ublas::matrix<double>(hiddenNodes, 1, BiasH)),
-      biasOutput(ublas::matrix<double>(outputNodes, 1, BiasO)),
-      activationFunction(aF) {
+    : weigthsIntputHidden(Matrix(hiddenNodes, intputNodes)),
+      weigthsHiddenOutput(Matrix(outputNodes, hiddenNodes)),
+      biasHidden(Matrix(hiddenNodes, 1, BiasH)),
+      biasOutput(Matrix(outputNodes, 1, BiasO)), activationFunction(aF) {
 
-  auto randomMatrix = [](ublas::matrix<double> &m, double min, double max) {
+  auto randomMatrix = [](Matrix &m, double min, double max) {
     std::random_device
         rd; // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
@@ -40,10 +39,9 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
 }
 
 // assume that given vector is INTPUT_NUMBER X N
-ublas::matrix<double>
-MultiLayerPerceptron::output(ublas::matrix<double> intput) {
+Matrix MultiLayerPerceptron::output(Matrix intput) {
   // hidden output
-  ublas::matrix<double> hidden = ublas::prod(weigthsIntputHidden, intput);
+  Matrix hidden = ublas::prod(weigthsIntputHidden, intput);
   if (DEBUG) {
     std::cout << "HIDDEN=weigthsIntputHidden X intput" << '\n'
               << hidden << "\n=\n"
@@ -70,7 +68,7 @@ MultiLayerPerceptron::output(ublas::matrix<double> intput) {
               << hidden << '\n';
   }
   // output
-  ublas::matrix<double> output = ublas::prod(weigthsHiddenOutput, hidden);
+  Matrix output = ublas::prod(weigthsHiddenOutput, hidden);
   output += biasOutput;
   for (size_t i = 0; i < output.size1(); i++)
     for (size_t j = 0; j < output.size2(); j++)
