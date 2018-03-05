@@ -18,7 +18,8 @@ private:
 
 public:
   MultiLayerPerceptron(size_t intputNodes, size_t hiddenNodes,
-                       size_t outputNodes, std::function<double(double)> aF);
+                       size_t outputNodes, std::function<double(double)> aF,
+                       std::function<double(double)> daF);
   Matrix output(Matrix intput);
   void train(Matrix intput, Matrix ans);
   virtual ~MultiLayerPerceptron() = default;

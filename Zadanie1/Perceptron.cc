@@ -4,7 +4,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <iostream>
 #include <random>
-#define DEBUG 1
+#define DEBUG 0
 
 namespace ublas = boost::numeric::ublas;
 
@@ -13,11 +13,12 @@ namespace ublas = boost::numeric::ublas;
 MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
                                            size_t hiddenNodes,
                                            size_t outputNodes,
-                                           std::function<double(double)> aF)
+                                           std::function<double(double)> aF,
+                                           std::function<double(double)> daF)
     : weigthsIntputHidden(Matrix(hiddenNodes, intputNodes)),
       weigthsHiddenOutput(Matrix(outputNodes, hiddenNodes)),
       biasHidden(Matrix(hiddenNodes, 1)), biasOutput(Matrix(outputNodes, 1)),
-      activationFunction(aF) {
+      activationFunction(aF), dActivationFunction(daF) {
 
   auto randomMatrix = [](Matrix &m, double min, double max) {
     std::random_device
@@ -81,16 +82,33 @@ Matrix MultiLayerPerceptron::output(Matrix intput) {
 }
 
 void MultiLayerPerceptron::train(Matrix in, Matrix ans) {
-
   Matrix hidden = ublas::prod(weigthsIntputHidden, in);
   hidden += biasHidden;
+  Matrix hidden_aF = hidden;
+  std::transform(hidden_aF.data().begin(), hidden_aF.data().end(),
+                 hidden_aF.data().begin(), activationFunction);
+  Matrix output = ublas::prod(weigthsHiddenOutput, hidden_aF);
+  output += biasOutput;
+  Matrix outputAf = output;
+  std::transform(output.data().begin(), output.data().end(),
+                 outputAf.data().begin(), activationFunction);
+
   // Conpute error matrixes
   // ERROR=ans-output
-  Matrix out = output(in);
-  Matrix errorOutput = ans - out;
+  Matrix errorOutput = ans - outputAf;
+  Matrix hiddenDaF = hidden;
 
-  // gradient Hidden->output
-  // hiden output is what hidden layer giver to output layer
-  // hidden_output=weigthsIntputHidden X intput + biasHidden
-  // gradinet_HO=lr*E_mx X dAF(output_output) X transpose(hidden_output)
+  if (1) {
+    std::cout << "HIDDEN: " << hidden << '\n'
+              << "error: " << errorOutput << "\n";
+  }
+  // compute gradient
+  // not working
+  std::transform(hidden.data().begin(), hidden.data().begin(),
+                 hiddenDaF.data().begin(), dActivationFunction);
+  Matrix deltaWeigthsHiddenOutput =
+      lr * ublas::prod_dot(outputAf, ublas::trans(weigthsHiddenOutput));
+  // learn
+  // weigthsHiddenOutput + deltaWeigthsHiddenOutput;
+  std::cout << "deltaWeigthsHiddenOutput" << deltaWeigthsHiddenOutput << '\n';
 }
