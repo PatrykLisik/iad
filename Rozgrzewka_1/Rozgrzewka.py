@@ -33,3 +33,4 @@ legend = plt.legend(loc='upper center',
 # Put a nicer background color on the legend.
 legend.get_frame().set_facecolor('#00FFCC')
 plt.savefig("wykres.png")
+#test
