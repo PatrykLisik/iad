@@ -12,13 +12,12 @@ namespace ublas = boost::numeric::ublas;
 
 MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
                                            size_t hiddenNodes,
-                                           size_t outputNodes, int BiasH,
-                                           int BiasO,
+                                           size_t outputNodes,
                                            std::function<double(double)> aF)
     : weigthsIntputHidden(Matrix(hiddenNodes, intputNodes)),
       weigthsHiddenOutput(Matrix(outputNodes, hiddenNodes)),
-      biasHidden(Matrix(hiddenNodes, 1, BiasH)),
-      biasOutput(Matrix(outputNodes, 1, BiasO)), activationFunction(aF) {
+      biasHidden(Matrix(hiddenNodes, 1)), biasOutput(Matrix(outputNodes, 1)),
+      activationFunction(aF) {
 
   auto randomMatrix = [](Matrix &m, double min, double max) {
     std::random_device
@@ -31,6 +30,8 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
   };
   randomMatrix(weigthsHiddenOutput, -1, 1);
   randomMatrix(weigthsIntputHidden, -1, 1);
+  randomMatrix(biasHidden, -1, 1);
+  randomMatrix(biasOutput, -1, 1);
 
   if (DEBUG) {
     std::cout << "weigthsHiddenOutput" << weigthsHiddenOutput
