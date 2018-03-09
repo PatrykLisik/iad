@@ -10,16 +10,18 @@ class NeuralNetwork:
         self.onodes = output_nodes
         self.lr = learningrate
 
-        self.wih = numpy.random.rand(self.hnodes, self.inodes) * 2 - 1
-        self.who = numpy.random.rand(self.onodes, self.hnodes) * 2 - 1
+        self.wih = numpy.random.normal(0.0, pow(self.hnodes, -0.5),
+                                       (self.hnodes, self.inodes))
+        self.who = numpy.random.normal(0.0, pow(self.onodes, -0.5),
+                                       (self.onodes, self.hnodes))
         self.activation_function = lambda x: scipy.special.expit(x)
         pass
 
     def train(self, inputs, targets):
-        hidden_inumpyuts = numpy.dot(self.wih, inumpyuts)
-        hidden_outputs = self.activation_function(hidden_inumpyuts)
-        final_inumpyuts = numpy.dot(self.who, hidden_outputs)
-        final_outputs = self.activation_function(final_inumpyuts)
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        hidden_outputs = self.activation_function(hidden_inputs)
+        final_inputs = numpy.dot(self.who, hidden_outputs)
+        final_outputs = self.activation_function(final_inputs)
         output_errors = targets - final_outputs
         hidden_errors = numpy.dot(self.who.T, output_errors)
         self.who += self.lr * numpy.dot((output_errors * final_outputs *
@@ -30,15 +32,40 @@ class NeuralNetwork:
                                         numpy.transpose(inputs))
         pass
 
-    def query(self, inumpyuts):
-        hidden_inumpyuts = numpy.dot(self.wih, inumpyuts)
-        hidden_outputs = self.activation_function(hidden_inumpyuts)
-        final_inumpyuts = numpy.dot(self.who, hidden_outputs)
-        final_outputs = self.activation_function(final_inumpyuts)
+    def query(self, inputs):
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        hidden_outputs = self.activation_function(hidden_inputs)
+        final_inputs = numpy.dot(self.who, hidden_outputs)
+        final_outputs = self.activation_function(final_inputs)
         return final_outputs
 
 
-nn = NeuralNetwork(3, 3, 3, 0.3)
-inumpyuts = numpy.array([1.0, 0.5, -1.5])
-outputs = nn.query(inumpyuts)
-print(outputs)
+input_nodes = 1
+hidden_nodes = 3
+output_nodes = 1
+learningrate = 0.1
+nn = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learningrate)
+
+input_list = [0]
+target_list = [0]
+
+input_file = open("approximation_train_1.txt", "r")
+for line in input_file:
+    buff = line.split(" ")
+    input_buff = float(buff[0])
+    target_buff = float(buff[1])
+    input_list[0] = input_buff
+    target_list[0] = target_buff
+    nn.train(numpy.array(input_list, ndmin=2).T,
+             numpy.array(target_list, ndmin=2).T)
+
+input_file.close()
+
+input_file = open("approximation_test.txt", "r")
+for line in input_file:
+    buff = line.split(" ")
+    input_buff = float(buff[0])
+    input_list[0] = input_buff
+    print(nn.query(numpy.array(input_list, ndmin=2).T))
+
+input_file.close()
