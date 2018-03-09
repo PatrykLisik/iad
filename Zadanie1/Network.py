@@ -31,11 +31,11 @@ class NeuralNetwork:
         self.who += self.lr * numpy.dot((output_errors * final_outputs *
                                         (1.0 - final_outputs)),
                                         numpy.transpose(hidden_outputs))
-        self.bho+=self.lr * output_errors
+        self.bho+=self.lr * output_errors * final_outputs * (1.0 - final_outputs)
         self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs *
                                         (1.0 - hidden_outputs)),
                                         numpy.transpose(inputs))
-        self.bih+=self.lr * hidden_errors
+        self.bih+=self.lr * hidden_errors * hidden_outputs * (1.0 - hidden_outputs)
         pass
 
     def query(self, inputs):
