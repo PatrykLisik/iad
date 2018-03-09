@@ -8,8 +8,6 @@
 
 namespace ublas = boost::numeric::ublas;
 
-// std::srand(std::time(nullptr));
-
 MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
                                            size_t hiddenNodes,
                                            size_t outputNodes,
@@ -42,7 +40,7 @@ MultiLayerPerceptron::MultiLayerPerceptron(size_t intputNodes,
 
 // assume that given vector is INTPUT_NUMBER X N
 Matrix MultiLayerPerceptron::output(Matrix intput) {
-  // hidden output
+  // calculate signals into hidden layer
   Matrix hidden = ublas::prod(weigthsIntputHidden, intput);
 
   if (DEBUG) {
@@ -59,7 +57,7 @@ Matrix MultiLayerPerceptron::output(Matrix intput) {
     std::cout << "=\n" << hidden << '\n';
   }
 
-  // hidden with activationFunction
+  // calculate the signals emerging from hidden layer
   Matrix hidden_aF = hidden;
   std::transform(hidden_aF.data().begin(), hidden_aF.data().end(),
                  hidden_aF.data().begin(), activationFunction);
@@ -82,11 +80,15 @@ Matrix MultiLayerPerceptron::output(Matrix intput) {
 }
 
 void MultiLayerPerceptron::train(Matrix in, Matrix ans) {
+
+  // compute hidden layer
   Matrix hidden = ublas::prod(weigthsIntputHidden, in);
   hidden += biasHidden;
   Matrix hidden_aF = hidden;
   std::transform(hidden_aF.data().begin(), hidden_aF.data().end(),
                  hidden_aF.data().begin(), activationFunction);
+  // compute output layer
+  // output without activationFunction applied is needed later
   Matrix output = ublas::prod(weigthsHiddenOutput, hidden_aF);
   output += biasOutput;
   Matrix outputAf = output;
@@ -94,21 +96,29 @@ void MultiLayerPerceptron::train(Matrix in, Matrix ans) {
                  outputAf.data().begin(), activationFunction);
 
   // Conpute error matrixes
-  // ERROR=ans-output
-  Matrix errorOutput = ans - outputAf;
-  Matrix hiddenDaF = hidden;
 
-  if (1) {
-    std::cout << "HIDDEN: " << hidden << '\n'
-              << "error: " << errorOutput << "\n";
-  }
-  // compute gradient
-  // not working
-  std::transform(hidden.data().begin(), hidden.data().begin(),
+  // ERROR_output=ans-output
+  // outputAf final output
+  Matrix errorOutput = ans - outputAf;
+  Matrix outputdAf = output;
+
+  // applay derivative of activationFunction
+  std::transform(output.data().begin(), output.data().end(),
+                 outputdAf.data().begin(), dActivationFunction);
+  // compute output->hidden adjustment
+  std::cout << "HERE" << errorOutput << '\n' << outputdAf << '\n';
+  Matrix tmp = ublas::prod(errorOutput, outputdAf);
+  Matrix deltaHO = lr * ublas::prod(tmp, ublas::trans(hidden_aF));
+  // learn!
+  weigthsHiddenOutput += deltaHO;
+
+  // ERROR_hidden=(weigthsHiddenOutput)^1 X ERROR_output
+  Matrix hiddenDaF = hidden;
+  std::transform(hidden.data().begin(), hidden.data().end(),
                  hiddenDaF.data().begin(), dActivationFunction);
-  Matrix deltaWeigthsHiddenOutput =
-      lr * ublas::prod_dot(outputAf, ublas::trans(weigthsHiddenOutput));
-  // learn
-  // weigthsHiddenOutput + deltaWeigthsHiddenOutput;
-  std::cout << "deltaWeigthsHiddenOutput" << deltaWeigthsHiddenOutput << '\n';
+  Matrix errorHidden =
+      ublas::prod(ublas::trans(weigthsHiddenOutput), errorOutput);
+  // deltaHI=le * ERROR_hidden X DaF(hidden) X trans(inputs)
+  tmp = ublas::prod(errorHidden, hiddenDaF);
+  weigthsIntputHidden += lr * ublas::prod(tmp, ublas::trans(in));
 }
