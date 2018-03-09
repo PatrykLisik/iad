@@ -12,8 +12,12 @@ class NeuralNetwork:
 
         self.wih = numpy.random.normal(0.0, pow(self.hnodes, -0.5),
                                        (self.hnodes, self.inodes))
+        self.bih = numpy.random.normal(0.0, pow(self.hnodes, -0.5),
+                                       (self.hnodes, 1))
         self.who = numpy.random.normal(0.0, pow(self.onodes, -0.5),
                                        (self.onodes, self.hnodes))
+        self.bho = numpy.random.normal(0.0, pow(self.onodes, -0.5),
+                                       (self.onodes, 1))
         self.activation_function = lambda x: scipy.special.expit(x)
         pass
 
@@ -27,15 +31,19 @@ class NeuralNetwork:
         self.who += self.lr * numpy.dot((output_errors * final_outputs *
                                         (1.0 - final_outputs)),
                                         numpy.transpose(hidden_outputs))
+        self.bho+=self.lr * output_errors
         self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs *
                                         (1.0 - hidden_outputs)),
                                         numpy.transpose(inputs))
+        self.bih+=self.lr * hidden_errors
         pass
 
     def query(self, inputs):
         hidden_inputs = numpy.dot(self.wih, inputs)
+        hidden_inputs+=self.bih
         hidden_outputs = self.activation_function(hidden_inputs)
         final_inputs = numpy.dot(self.who, hidden_outputs)
+        final_inputs+=self.bho
         final_outputs = self.activation_function(final_inputs)
         return final_outputs
 
