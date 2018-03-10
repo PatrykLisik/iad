@@ -16,7 +16,7 @@ where
 ![equation](http://latex.codecogs.com/gif.latex?$$w_0$$) can be considered as bias
 
 ## Solution
- Let error function be
+ Let denote error function
 
   ![equation](http://latex.codecogs.com/gif.latex?h(X)=\frac{1}{2n}\sum_{n}^{i=1}(f(X^j)-y^j)^2)
 
@@ -28,6 +28,8 @@ To find best weights, it is necessary to find global minimum, which is not a fea
 
 ![equation](http://latex.codecogs.com/gif.latex?\large&space;\nabla&space;h(X)=\begin{bmatrix}&space;\frac{\partial&space;h(X)}{\partial&space;x_{n-1}}&space;\\&space;\frac{\partial&space;h(X)}{\partial&space;x_{n-2}}\\&space;\vdots\\&space;\frac{\partial&space;h(X)}{\partial&space;x_{1}}\\&space;\end{bmatrix})
 
- ![equation](http://latex.codecogs.com/gif.latex?\frac{\partial&space;h(X)}{\partial&space;x_{1}}=\frac{\partial&space;}{\partial&space;x_{1}}\frac{1}{2n}\sum_{n}^{i=1}(f(X^j)-y^j)^2=\frac{1}{2n}\sum_{n}^{i=1}\frac{&space;\partial&space;f(X^j)-y^j)^2}{\partial&space;x_{1}}=\\ \frac{1}{2n}\sum_{n}^{i=1}2(f(X^j)-y^j)f(X^j)(1-f(X^j))x_1)
+Let $$\text{S}_1(N) = \sum_{p=1}^N \text{E}(p)$$
 
- ![equation](http://latex.codecogs.com/gif.latex?\nabla&space;h(X)=\begin{bmatrix}&space;\frac{1}{n}\sum_{n}^{i=1}(f(X^j)-y^j)f(X^j)(1-f(X^j))x_{n}&space;\\&space;\frac{1}{n}\sum_{n}^{i=1}(f(X^j)-y^j)f(X^j)(1-f(X^j))x_{n-1}\\&space;\vdots\\&space;\frac{1}{n}\sum_{n}^{i=1}(f(X^j)-y^j)f(X^j)(1-f(X^j))x_1\\&space;\end{bmatrix})
+![equation](http://bit.ly/2Hp8sCT) 
+
+ ![equation](http://latex.codecogs.com/gif.latex?\dpi{120}&space;\large&space;\nabla&space;h(X)=\begin{bmatrix}&space;\frac{1}{n}\sum_{n}^{i=1}(f(X^j)-y^j)f(X^j)(1-f(X^j))x_{n}&space;\\&space;\frac{1}{n}\sum_{n}^{i=1}(f(X^j)-y^j)f(X^j)(1-f(X^j))x_{n-1}\\&space;\vdots\\&space;\frac{1}{n}\sum_{n}^{i=1}(f(X^j)-y^j)f(X^j)(1-f(X^j))x_1\\&space;\end{bmatrix})
