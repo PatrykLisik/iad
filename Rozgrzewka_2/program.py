@@ -19,50 +19,48 @@ def getData(intput):
     outY=[]
     for row in reader:
         i = list(map(float,row[0].split(";")))
-        outX.append(i[0:-1][0])
+        outX.append(i[0:-1])
         outY.append(i[-1])
     return outX,outY
+def genName(intputFileName):
+    noExt=intputFileName.split(".")[0]
+    return "quality"+noExt[-1]+".png"
+def plotChart(x,y,out):
+        #Set up plot
+        plt.figure(figsize=(10,10))
+        plt.grid()
+        plt.title("")
+        #plt.ylim([0,0.02])
+        #plt.xscale("log")
+        plt.yscale("log")
+        plt.xlabel("Number of iterations",fontsize="xx-large")
+        plt.ylabel("Mean squared error", fontsize="xx-large")
+        plt.plot(x,y,color='purple')
+        plt.savefig(out)
 
 intput_file = open(sys.argv[1], "r+")
-x,y=getData(intput_file)
+PointsX,PointsY=getData(intput_file)
 intput_file.close()
-print("X: ",x,"\nY:",y)
-#points
-PointsX=x
-PointsY=y
 
-#Set up plot
-plt.figure(figsize=(10,10))
-plt.grid()
-plt.title("")
-#plt.ylim([0,0.02])
-#plt.xscale("log")
-plt.yscale("log")
-plt.xlabel("Number of iterations",fontsize="xx-large")
-plt.ylabel("Mean squared error", fontsize="xx-large")
-
-aprox=Aprox(1)
+aprox=Aprox(len(PointsX[0]))
 
 Error=1
 ErrorY=[]
 ErrorX=[]
 nOfIter=0
-while Error>10**(-4):
+while Error>10**(-5):
     Error=MSE(aprox,PointsX,PointsY);
     for i in range(len(PointsX)):
         aprox.updateWeigths(PointsX[i],PointsY[i])
     ErrorY.append(Error)
     ErrorX.append(nOfIter)
-    if nOfIter%20000==0:
+    """if nOfIter%20==0:
         print("Error:",Error)
-        print("Iteration:",nOfIter)
-    nOfIter+=1;
+        print("Iteration:",nOfIter)"""
+    nOfIter+=1
 #print to stdout
 for i in aprox.W:
-    print(i[0])
-print(aprox.w0[0][0])
-
-print("total number of iterations:",nOfIter)
-
-plt.plot(ErrorX,ErrorY,color='purple')
-plt.savefig("Errors1.png")
+    for j in i:
+        print(j)
+print(aprox.w0[0])
+plotChart(ErrorX,ErrorY,genName(sys.argv[1]))

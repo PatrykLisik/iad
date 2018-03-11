@@ -16,7 +16,7 @@ class Aprox(object):
         return (f(X)-y)*f(X)*(1-f(X))
     def __call__(self,X):
         #output of sigmoid is matrix is 1x1, so one value is returned
-        return self.sigmoid(X)[0][0]
+        return self.sigmoid(X)[0]
     def updateWeigths(self,X,y):
         #basicly learnig
         g=self.grad(X,y)*self.step
