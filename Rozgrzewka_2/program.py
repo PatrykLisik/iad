@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import numpy as np
 from matplotlib.pyplot import cm
+from matplotlib.ticker import OldScalarFormatter,LogFormatter,ScalarFormatter
+from matplotlib import ticker
+import matplotlib.ticker as mtick
 import matplotlib.pyplot as plt
 from Aprox import *
 import csv
@@ -25,17 +28,25 @@ def getData(intput):
 def genName(intputFileName):
     noExt=intputFileName.split(".")[0]
     return "quality"+noExt[-1]+".png"
+def myticks(x,pos):
+    if x <= 0:
+         return "$0$"
+    exponent = int(np.log10(x))
+    coeff = x/10**exponent
+    return r"${:2.0f} \times 10^{{ {:2d} }}$".format(coeff,exponent)
 def plotChart(x,y,out):
         #Set up plot
-        plt.figure(figsize=(10,10))
+        fig=plt.figure(figsize=(10,10))
+        ax = fig.add_subplot(111)
+        ax.xaxis.set_major_formatter(ticker.FuncFormatter(myticks))
         plt.grid()
-        plt.title("")
+        plt.title(genName(sys.argv[1]))
         #plt.ylim([0,0.02])
         #plt.xscale("log")
         plt.yscale("log")
         plt.xlabel("Number of iterations",fontsize="xx-large")
         plt.ylabel("Mean squared error", fontsize="xx-large")
-        plt.plot(x,y,color='purple')
+        ax.plot(x,y,color='purple')
         plt.savefig(out)
 
 intput_file = open(sys.argv[1], "r+")
@@ -48,15 +59,15 @@ Error=1
 ErrorY=[]
 ErrorX=[]
 nOfIter=0
-while Error>10**(-5):
+while Error>10**(-4):
     Error=MSE(aprox,PointsX,PointsY);
     for i in range(len(PointsX)):
         aprox.updateWeigths(PointsX[i],PointsY[i])
     ErrorY.append(Error)
     ErrorX.append(nOfIter)
-    """if nOfIter%20==0:
+    if nOfIter%20000==0:
         print("Error:",Error)
-        print("Iteration:",nOfIter)"""
+        print("Iteration:",nOfIter)
     nOfIter+=1
 #print to stdout
 for i in aprox.W:
