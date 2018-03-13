@@ -65,13 +65,15 @@ while Error>10**(-4):
         aprox.updateWeigths(PointsX[i],PointsY[i])
     ErrorY.append(Error)
     ErrorX.append(nOfIter)
-"""    if nOfIter%20000==0:
-        print("Error:",Error)
-        print("Iteration:",nOfIter)"""
     nOfIter+=1
-#print to stdout
+    #print to stdout
+    for i in aprox.W:
+        for j in i:
+            print(j,end=" ")
+    print(aprox.w0[0])
+
 for i in aprox.W:
     for j in i:
-        print(j)
-print(aprox.w0[0])
+        print(j,end=" ", file=open(sys.argv[2], "a"))
+print(aprox.w0[0],file=open(sys.argv[2], "a"))
 plotChart(ErrorX,ErrorY,genName(sys.argv[1]))
