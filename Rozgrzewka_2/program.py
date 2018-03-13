@@ -67,13 +67,14 @@ while Error>10**(-4):
     ErrorX.append(nOfIter)
     nOfIter+=1
     #print to stdout
-    for i in aprox.W:
-        for j in i:
-            print(j,end=" ")
-    print(aprox.w0[0])
+    print(Error)
 
+#print to file
 for i in aprox.W:
     for j in i:
-        print(j,end=" ", file=open(sys.argv[2], "a"))
+        #output file name is in second argument
+        print(j, file=open(sys.argv[2], "w"))
 print(aprox.w0[0],file=open(sys.argv[2], "a"))
+
+#plot chart
 plotChart(ErrorX,ErrorY,genName(sys.argv[1]))
