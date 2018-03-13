@@ -9,7 +9,7 @@ class Aprox(object):
     def sigmoid(self,X):
         #Muliti-dimensional sigmoid
         #output is matrix is 1x1,
-        return 1/(1+np.exp(np.inner(X,self.W)+self.w0))
+        return 1/(1+np.exp(-(np.inner(X,self.W)+self.w0)))
     def grad(self,X,y):
         #Notice that it is not multiplay by x_i
         f=self.sigmoid
@@ -20,8 +20,8 @@ class Aprox(object):
     def updateWeigths(self,X,y):
         #basicly learnig
         g=self.grad(X,y)*self.step
-        self.W+=g*X;
-        self.w0+=g
+        self.W-=g*X;
+        self.w0-=g
     def map(self,x):
         ans=[]
         for i in x:
