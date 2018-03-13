@@ -70,11 +70,11 @@ while Error>10**(-4):
     print(Error)
 
 #print to file
+print(aprox.w0[0],file=open(sys.argv[2], "w"))
 for i in aprox.W:
-    for j in i:
         #output file name is in second argument
-        print(j, file=open(sys.argv[2], "w"))
-print(aprox.w0[0],file=open(sys.argv[2], "a"))
+        for j in i:
+            print(j, file=open(sys.argv[2], "a"))
 
 #plot chart
 plotChart(ErrorX,ErrorY,genName(sys.argv[1]))
