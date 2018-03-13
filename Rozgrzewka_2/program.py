@@ -33,10 +33,10 @@ def myticks(x,pos):
          return "$0$"
     exponent = int(np.log10(x))
     coeff = x/10**exponent
-    return r"${:2.0f} \times 10^{{ {:2d} }}$".format(coeff,exponent)
+    return r"${:2.1f} \times 10^{{ {:2d} }}$".format(coeff,exponent)
 def plotChart(x,y,out):
         #Set up plot
-        fig=plt.figure(figsize=(10,10))
+        fig=plt.figure(figsize=(20,10))
         ax = fig.add_subplot(111)
         ax.xaxis.set_major_formatter(ticker.FuncFormatter(myticks))
         plt.grid()
@@ -65,13 +65,16 @@ while Error>10**(-4):
         aprox.updateWeigths(PointsX[i],PointsY[i])
     ErrorY.append(Error)
     ErrorX.append(nOfIter)
-    if nOfIter%20000==0:
-        print("Error:",Error)
-        print("Iteration:",nOfIter)
     nOfIter+=1
-#print to stdout
+    #print to stdout
+    print(Error)
+
+#print to file
+print(aprox.w0[0],file=open(sys.argv[2], "w"))
 for i in aprox.W:
-    for j in i:
-        print(j)
-print(aprox.w0[0])
+        #output file name is in second argument
+        for j in i:
+            print(j, file=open(sys.argv[2], "a"))
+
+#plot chart
 plotChart(ErrorX,ErrorY,genName(sys.argv[1]))
