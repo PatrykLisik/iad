@@ -1,7 +1,7 @@
 # Warm-up 2
 ## Before you start
 
-It is worth mentioning that this thing is little hard and to understand competently, you need to have at least 2 seasons of Rick and Morty watched to understand it without preparation. 
+It is worth mentioning that this thing is little hard and to understand competently. You need to have at least 2 seasons of Rick and Morty watched to understand math and code without preparation.
 ## Abstract
 Approximate n-dimensional sigmoid function to given points with gradient descent
 
@@ -29,6 +29,11 @@ To find best weights, it is necessary to find global minimum, which is not a fea
 
 ![equation](http://mathurl.com/ycw4l6ok.png)
 
+Derivative of sigmoid function
+
+![equation](http://mathurl.com/y9lkaqq7.png)
+
+Almost every partial derivative
 ![equation](http://mathurl.com/yakgneqa.png)
 For ![equation](http://mathurl.com/y8zd3hj9.png) everything is working pretty similar, but there is no x at the end because ![equation](http://mathurl.com/y9c26ow2 .png)
 
@@ -39,3 +44,10 @@ To sum up for ![equation](http://mathurl.com/y8zd3hj9.png)
 The whole gradient looks like this
 
 ![equation](http://mathurl.com/y8qr9nk6.png)
+
+## Algorithm
+
+1. Get points
+1. Compute gradient and multiply it by "step"
+1. Subtract gradient from weights
+1. If error is higher then target one go to 1.
