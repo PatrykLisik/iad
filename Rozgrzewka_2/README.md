@@ -2,7 +2,7 @@
 
 ## Before you start
 
-It is worth mentioning that this thing is little hard and to understand competently. You need to have at least 2 seasons of Rick and Morty watched to understand math and code without preparation.
+It is worth mentioning that this thing is little hard. To understand it competently, you need to have at least 2 seasons of Rick and Morty watched to understand math and code without preparation.
 
 ## Abstract
 
