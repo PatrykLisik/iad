@@ -55,3 +55,9 @@ class NeutralNetwork:
         final_inputs += self.bho
         final_outputs = self.activation_function(final_inputs)
         return final_outputs
+    def getHiddenOutputs(self, input_list):
+        inputs=numpy.array(input_list, ndmin=2).T
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        hidden_inputs += self.bih
+        hidden_outputs = self.activation_function(hidden_inputs)
+        return hidden_outputs
