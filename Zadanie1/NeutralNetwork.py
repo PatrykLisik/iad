@@ -3,18 +3,12 @@ import scipy.special
 
 
 class NeutralNetwork:
-
-     """bias_mult => {0,1} to off/on bias
-        momentum_rate => {0,1} to off/on momentum
-        learningrate => (0,inf) to step which is taken on every learnig example
-     """
-    def __init__(self, input_nodes, hidden_nodes, output_nodes, learning_rate=0.1, bias_mult=0, monemtum_rate=0):
+    def __init__(self, input_nodes, hidden_nodes, output_nodes, learning_rate=0.1, bias_mult=0,monemtum_rate=0):
         self.inodes = input_nodes
         self.hnodes = hidden_nodes
         self.onodes = output_nodes
-        self.lr = learnin_grate
+        self.lr = learning_rate
         self.bias_mult=bias_mult
-
         self.wih = numpy.random.rand(self.hnodes, self.inodes)
         self.bih = numpy.random.rand(self.hnodes, 1)*bias_mult
         self.who = numpy.random.rand(self.onodes, self.hnodes)
@@ -23,7 +17,6 @@ class NeutralNetwork:
         self.beta=0.1;
         self.activation_function = lambda x: scipy.special.expit(x)
         pass
-
     def train(self, input_list, target_list):
         inputs=numpy.array(input_list, ndmin=2).T
         targets=numpy.array(target_list, ndmin=2).T
@@ -41,17 +34,17 @@ class NeutralNetwork:
         self.who += self.lr * numpy.dot((output_errors * final_outputs *
                                         (1.0 - final_outputs)),
                                         numpy.transpose(hidden_outputs))
-        self.who+=who_back*self.momentum
+        self.who+=(who_back*self.momentum)
         self.bho += self.lr * output_errors * final_outputs * (1.0 -
                                             final_outputs)*self.bias_mult
 
         wih_back=self.wih # momentum
         self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs *
-                                        (1.0 - hidden_outputs)),
-                                        numpy.transpose(inputs))
-        self.wih+=self.wih*momentum
-        self.bih += self.lr * hidden_errors * hidden_outputs * (1.0 -
-                                            hidden_outputs)*self.bias_mult
+                                        (1.0 - hidden_outputs)),numpy.transpose(inputs))
+        self.wih+=self.wih*self.momentum
+
+        self.bih += self.lr * hidden_errors * hidden_outputs * (1.0 - hidden_outputs)
+        self.bih*=self.bias_mult
 
     def query(self, input_list):
         inputs=numpy.array(input_list, ndmin=2).T
@@ -62,3 +55,9 @@ class NeutralNetwork:
         final_inputs += self.bho
         final_outputs = self.activation_function(final_inputs)
         return final_outputs
+    def getHiddenOutputs(self, input_list):
+        inputs=numpy.array(input_list, ndmin=2).T
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        hidden_inputs += self.bih
+        hidden_outputs = self.activation_function(hidden_inputs)
+        return hidden_outputs
