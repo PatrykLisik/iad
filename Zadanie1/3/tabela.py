@@ -19,7 +19,7 @@ input_file.close()
 results=[]
 results.append(["Learning rate","Momentum","Ilosc iteracji","MSE","STD"])
 
-for i in range(15):
+for k in range(100):
     input_nodes = 4
     hidden_nodes = 2
     output_nodes = 4
@@ -31,23 +31,24 @@ for i in range(15):
     error_test=10
     std="???"
     current_tuple=[learningrate,momentum]
-    while i<10**3 or error_test<10**-2:
+    while error_test>5*10**-3:
+        if i>10**5:
+            break
         for j in range(len(input_list)):
             nn.train(input_list[j],target_list[j])
         f=nn.query
         error_test=MSE(f,input_list,target_list)
-        if i%1000==0:
+        """if i%1000==0:
             print("ERROR: ",error_test)
             print("i:",i)
-            print("momentum: ",momentum)
+            print("momentum: ",momentum)"""
         i+=1
     current_tuple.append(i)
     current_tuple.append(error_test)
     current_tuple.append(std)
     results.append(current_tuple)
+    print(current_tuple)
 
-for i in results:
-    print(i)
 with open("zad2.csv", "w") as f:
     writer = csv.writer(f)
     writer.writerows(results)
