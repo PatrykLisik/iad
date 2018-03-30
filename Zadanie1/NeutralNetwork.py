@@ -34,17 +34,17 @@ class NeutralNetwork:
         self.who += self.lr * numpy.dot((output_errors * final_outputs *
                                         (1.0 - final_outputs)),
                                         numpy.transpose(hidden_outputs))
-        self.who+=who_back*self.momentum
+        self.who+=(who_back*self.momentum)
         self.bho += self.lr * output_errors * final_outputs * (1.0 -
                                             final_outputs)*self.bias_mult
 
         wih_back=self.wih # momentum
         self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs *
-                                        (1.0 - hidden_outputs)),
-                                        numpy.transpose(inputs))
+                                        (1.0 - hidden_outputs)),numpy.transpose(inputs))
         self.wih+=self.wih*self.momentum
-        self.bih += self.lr * hidden_errors * hidden_outputs * (1.0 -
-                                            hidden_outputs)*self.bias_mult
+
+        self.bih += self.lr * hidden_errors * hidden_outputs * (1.0 - hidden_outputs)
+        self.bih*=self.bias_mult
 
     def query(self, input_list):
         inputs=numpy.array(input_list, ndmin=2).T

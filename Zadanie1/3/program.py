@@ -4,12 +4,11 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir)
 from NeutralNetwork import NeutralNetwork
-from Functions import MSE,myticks
+from Functions import MSE,myticks,getAllData
 import numpy as np
 from matplotlib.pyplot import cm
 from matplotlib import ticker
 import matplotlib.pyplot as plt
-import csv
 
 
 def plotChart(x,y,out):
@@ -22,26 +21,18 @@ def plotChart(x,y,out):
         plt.xlabel("Ilość iteracji",fontsize="xx-large")
         plt.ylabel("Błąd śreniokwadratowy", fontsize="xx-large")
         for i in range(len(x)):
-            ax.plot(x[i],y[i],label="Ilość neuronow {0}".format(i))
+            ax.plot(x[i],y[i],label="Ilość neuronow {0}".format(i+1))
         legend = plt.legend(loc='upper center',
                   ncol=3, fancybox=True, shadow=True)
         legend.get_frame()
         plt.savefig(out)
 
 
-def getData(intput):
-    reader = csv.reader(intput)
-    outX=[]
-    for row in reader:
-        i = list(map(float,row[0].split(" ")))
-        outX.append(i)
-    return outX
-
 #BEGIN OF THE SCRIPT
 input_list = []
 target_list = []
 input_file = open(sys.argv[1], "r+")
-input_list=getData(input_file)
+input_list=getAllData(input_file)
 target_list=input_list
 input_file.close()
 
