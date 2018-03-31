@@ -23,3 +23,12 @@ def getAllData(intput):
         i = list(map(float,row[0].split(" ")))
         outX.append(i)
     return outX
+def getData(intput):
+    reader = csv.reader(intput)
+    outX=[]
+    outY=[]
+    for row in reader:
+        i = list(map(float,row[0].split(" ")))
+        outX.append(i[0:-1])
+        outY.append(i[-1])
+    return outX,outY
