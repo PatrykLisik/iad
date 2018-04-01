@@ -22,13 +22,12 @@ def plotChart(train_x,train_y,test_x,test_y,func_arry,title):
     train_y=flat_list(train_y)
     test_x=flat_list(test_x)
     test_y=flat_list(test_y)
-    plt.title(title)
     fig=plt.figure(figsize=(20,10))
     ax = fig.add_subplot(111)
     #Plot train points
-    plt.scatter(train_x,train_y,color='black', alpha=0.5)
+    plt.scatter(train_x,train_y,color='black', alpha=0.5,label="Punkty terningowe")
     #Plot test points
-    plt.scatter(test_x,test_y,color='blue',alpha=0.1)
+    plt.scatter(test_x,test_y,color='blue',alpha=0.1,label="Punkty testowe")
     #Plot given networks
     func_x=np.arange(min(train_x)-1,max(train_x)+1,0.001)
     k=0
@@ -36,14 +35,15 @@ def plotChart(train_x,train_y,test_x,test_y,func_arry,title):
         func_y=[]
         for i in func_x:
             func_y.append(nn.query([i])[0][0])
-        ax.plot(func_x,func_y,label="Hidden neurons {0}".format(nn.hnodes))
+        ax.plot(func_x,func_y,label="Neurony w warstwie ukrytej {0}".format(nn.hnodes))
         k+=1
 
     plt.grid()
+    plt.title(title)
     #Legend
     plt.legend(loc='upper center',
               ncol=3, fancybox=True, shadow=True)
-    plt.savefig(title)
+    plt.savefig(title+".png")
 
 
 #train set
@@ -64,7 +64,7 @@ intput_file.close()
 
 #networks to plot
 networks=[]
-
+number_of_iteration=2*10**2
 for k in range (1,26,4):
     input_nodes = 1
     hidden_nodes = k
@@ -85,7 +85,7 @@ for k in range (1,26,4):
     error_test=10
     ErrorX=[]
     ErrorY=[]
-    while i<3*10**4:
+    while i<number_of_iteration:
         f=nn.query
         if(error_train2==error_train):
             print("Learning end")
@@ -111,4 +111,4 @@ for k in range (1,26,4):
 plotChart(train_input_list,train_target_list,
           test_input_list,test_target_list,
           networks,
-          "Aprokysmacja4")
+          "Aprokysmacja: plik:{1}, Iteracje:{0}".format(number_of_iteration,str(sys.argv[1])))
