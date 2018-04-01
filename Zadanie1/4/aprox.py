@@ -64,8 +64,8 @@ intput_file.close()
 
 #networks to plot
 networks=[]
-number_of_iteration=2*10**2
-for k in range (1,26,4):
+number_of_iteration=3*10**4
+for k in range (1,18,4):
     input_nodes = 1
     hidden_nodes = k
     output_nodes = 1
