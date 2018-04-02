@@ -104,4 +104,4 @@ for k in range (1,18,4):
 plotChart(train_input_list,train_target_list,
           test_input_list,test_target_list,
           networks,
-          "Aprokysmacja: plik:{1}, Iteracje:{0} Learningrate{2}".format(number_of_iteration,str(sys.argv[1]),learningrate))
+          "Aprokysmacja: plik:{1}, Epoki nauki:{0} Learningrate{2}".format(number_of_iteration,str(sys.argv[1]),learningrate))

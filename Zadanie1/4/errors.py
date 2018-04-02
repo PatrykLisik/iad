@@ -55,9 +55,9 @@ intput_file = open(sys.argv[2], "r+")
 test_input_list,test_target_list=getData(intput_file)
 intput_file.close()
 
-number_of_iteration=3*10**3
 errors_to_plot={}
-learningrate = 0.1
+number_of_iteration=4*10**3
+learningrate = 0.02
 bias=1;
 momentum=0
 for k in [1,5,19]:
@@ -81,10 +81,10 @@ for k in [1,5,19]:
         error_train=MSE(f,train_input_list,train_target_list)
         error_test=MSE(f,test_input_list,test_target_list)
         if i%100==0:
-            '''print("Iteracja: ",i)
+            print("Iteracja: ",i)
             print("error_train: ",error_train)
             print("error_test: ",error_test)
-            print("hidden_nodes: ",hidden_nodes)'''
+            print("hidden_nodes: ",hidden_nodes)
         for j in range(len(train_input_list)):
             nn.train(train_input_list[j],train_target_list[j])
         ErrorX.append(i);
@@ -93,5 +93,4 @@ for k in [1,5,19]:
         i+=1
     errors_to_plot[k]=[ErrorX,ErrorY_train,ErrorY_test]
 plotChart(errors_to_plot,
-          "Błędy: plik:{1}, Iteracje:{0} Learningrate: {2}".
-          format(number_of_iteration,str(sys.argv[1])),learningrate)
+          "Błędy: plik:{1}, Epoki nauki:{0} Learningrate: {2}".format(number_of_iteration,str(sys.argv[1]),learningrate))

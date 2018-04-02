@@ -70,7 +70,7 @@ lr_max = 0.3
 steps=5
 bias=1;
 momentum=0
-number_of_iteration=3*10**3
+number_of_iteration=10**4
 for k in np.linspace(lr_min,lr_max,steps):
     input_nodes = 1
     hidden_nodes = 19
@@ -102,4 +102,4 @@ for k in np.linspace(lr_min,lr_max,steps):
 plotChart(train_input_list,train_target_list,
           test_input_list,test_target_list,
           networks,
-          "Różne lr - Aprokysmacja: plik:{1}, Iteracje:{0}".format(number_of_iteration,str(sys.argv[1]),learningrate))
+          "Różne lr - Aprokysmacja: plik:{1}, Epoki nauki:{0}".format(number_of_iteration,str(sys.argv[1]),learningrate))
