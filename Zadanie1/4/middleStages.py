@@ -37,7 +37,7 @@ def plotChart(train_x,train_y,test_x,test_y,func_arry,title):
         func_y=[]
         for i in func_x:
             func_y.append(nn.query([i])[0][0])
-        ax.plot(func_x,func_y,label="Ilośc iteracji {0}".format(iter))
+        ax.plot(func_x,func_y,label="Epoki nauki {0}".format(iter))
 
     plt.grid()
     plt.title(title)
@@ -111,4 +111,4 @@ while i<number_of_iteration:
 plotChart(train_input_list,train_target_list,
           test_input_list,test_target_list,
           networks,
-          "Stany pośrednie: plik:{1}, Iteracje:{0} Neurony: {2}".format(number_of_iteration,str(sys.argv[1]),hidden_nodes))
+          "Stany pośrednie: plik:{1}, Epoki nauki:{0} Neurony: {2}".format(number_of_iteration,str(sys.argv[1]),hidden_nodes))
