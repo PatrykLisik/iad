@@ -17,6 +17,10 @@ python3 aprox.py train2.txt test.txt &
 python3 errors.py train1.txt test.txt &
 python3 errors.py train2.txt test.txt &
 
+#Dane csv do tabel
+python3 tabela.py train1.txt test.txt
+python3 tabela.py train2.txt test.txt
+
 wait
 END=$(date +%s.%N)
 DIFF=$(echo "$END - $START" | bc)
