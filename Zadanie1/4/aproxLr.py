@@ -35,10 +35,11 @@ def plotChart(train_x,train_y,test_x,test_y,func_arry,title):
         func_y=[]
         for i in func_x:
             func_y.append(nn.query([i])[0][0])
-        ax.plot(func_x,func_y,label="Neurony w warstwie ukrytej {0}".format(nn.hnodes))
+        ax.plot(func_x,func_y,label="Learningrate {0}".format(nn.lr))
         k+=1
 
     plt.grid()
+    plt.ylim([-7,2.5])
     plt.title(title)
     #Legend
     plt.legend(loc='upper center',
@@ -64,30 +65,27 @@ intput_file.close()
 
 #networks to plot
 networks=[]
-learningrate = 0.05
+lr_min = 0.0001
+lr_max = 0.3
+steps=5
 bias=1;
 momentum=0
-number_of_iteration=10**4
-for k in range (1,18,4):
+number_of_iteration=3*10**3
+for k in np.linspace(lr_min,lr_max,steps):
     input_nodes = 1
-    hidden_nodes = k
+    hidden_nodes = 19
     output_nodes = 1
+    learningrate=k
     activation_function_output=lambda x: x
     dactivation_function_output=lambda x: 1
     nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes,
                         learningrate,bias,momentum,activation_function_output,
                         dactivation_function_output)
-
-
     i=0
-    error_train2=5
     error_train=10;
     error_test=10
     while i<number_of_iteration:
         f=nn.query
-        if(error_train2==error_train):
-            print("Learning end")
-            break
         error_train2=error_train
         error_train=MSE(f,train_input_list,train_target_list)
         error_test=MSE(f,test_input_list,test_target_list)
@@ -95,7 +93,7 @@ for k in range (1,18,4):
             print("Iteracja: ",i)
             print("error_train: ",error_train)
             print("error_test: ",error_test)
-            print("hidden_nodes: ",hidden_nodes)
+            print("learningrate: ",learningrate)
         for j in range(len(train_input_list)):
             nn.train(train_input_list[j],train_target_list[j])
         i+=1
@@ -104,4 +102,4 @@ for k in range (1,18,4):
 plotChart(train_input_list,train_target_list,
           test_input_list,test_target_list,
           networks,
-          "Aprokysmacja: plik:{1}, Iteracje:{0} Learningrate{2}".format(number_of_iteration,str(sys.argv[1]),learningrate))
+          "Różne lr - Aprokysmacja: plik:{1}, Iteracje:{0}".format(number_of_iteration,str(sys.argv[1]),learningrate))

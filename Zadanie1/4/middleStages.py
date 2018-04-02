@@ -11,6 +11,8 @@ from NeutralNetwork import NeutralNetwork
 from Functions import MSE,getData
 import numpy as np
 import matplotlib.pyplot as plt
+import  copy
+
 def flat_list(d_list):
     return list(np.array(d_list).flat)
 
@@ -31,12 +33,11 @@ def plotChart(train_x,train_y,test_x,test_y,func_arry,title):
     #Plot given networks
     func_x=np.arange(min(train_x)-1,max(train_x)+1,0.001)
     k=0
-    for nn in func_arry:
+    for iter,nn in func_arry.items():
         func_y=[]
         for i in func_x:
             func_y.append(nn.query([i])[0][0])
-        ax.plot(func_x,func_y,label="Neurony w warstwie ukrytej {0}".format(nn.hnodes))
-        k+=1
+        ax.plot(func_x,func_y,label="Ilośc iteracji {0}".format(iter))
 
     plt.grid()
     plt.title(title)
@@ -63,45 +64,51 @@ test_input_list,test_target_list=getData(intput_file)
 intput_file.close()
 
 #networks to plot
-networks=[]
-learningrate = 0.05
+networks={}
+number_of_iteration=600
+iter_to_plot=np.linspace(0,number_of_iteration,6)
+
+
+input_nodes = 1
+hidden_nodes = 5
+output_nodes = 1
+learningrate = 0.1
 bias=1;
 momentum=0
-number_of_iteration=10**4
-for k in range (1,18,4):
-    input_nodes = 1
-    hidden_nodes = k
-    output_nodes = 1
-    activation_function_output=lambda x: x
-    dactivation_function_output=lambda x: 1
-    nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes,
-                        learningrate,bias,momentum,activation_function_output,
-                        dactivation_function_output)
+activation_function_output=lambda x: x
+dactivation_function_output=lambda x: 1
+nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes,
+                    learningrate,bias,momentum,activation_function_output,
+                    dactivation_function_output)
 
 
-    i=0
-    error_train2=5
-    error_train=10;
-    error_test=10
-    while i<number_of_iteration:
-        f=nn.query
-        if(error_train2==error_train):
-            print("Learning end")
-            break
-        error_train2=error_train
-        error_train=MSE(f,train_input_list,train_target_list)
-        error_test=MSE(f,test_input_list,test_target_list)
-        if i%1000==0:
-            print("Iteracja: ",i)
-            print("error_train: ",error_train)
-            print("error_test: ",error_test)
-            print("hidden_nodes: ",hidden_nodes)
-        for j in range(len(train_input_list)):
-            nn.train(train_input_list[j],train_target_list[j])
-        i+=1
-    networks.append(nn)
+i=0
+error_train2=5
+error_train=10;
+error_test=10
+while i<number_of_iteration:
+    f=nn.query
+    if(error_train2==error_train):
+        print("Learning end")
+        break
+    error_train2=error_train
+    error_train=MSE(f,train_input_list,train_target_list)
+    error_test=MSE(f,test_input_list,test_target_list)
+    if i%1000==0:
+        print("Iteracja: ",i)
+        print("error_train: ",error_train)
+        print("error_test: ",error_test)
+        print("hidden_nodes: ",hidden_nodes)
+    for j in range(len(train_input_list)):
+        nn.train(train_input_list[j],train_target_list[j])
+    if i in iter_to_plot:
+        n=copy.deepcopy(nn)
+        networks[i]=n
+    i+=1
+
+
 
 plotChart(train_input_list,train_target_list,
           test_input_list,test_target_list,
           networks,
-          "Aprokysmacja: plik:{1}, Iteracje:{0} Learningrate{2}".format(number_of_iteration,str(sys.argv[1]),learningrate))
+          "Stany pośrednie: plik:{1}, Iteracje:{0} Neurony: {2}".format(number_of_iteration,str(sys.argv[1]),hidden_nodes))
