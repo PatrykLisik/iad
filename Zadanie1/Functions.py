@@ -7,7 +7,7 @@ def MSE(f,intput,output):
     ans=0;
     for i in range(len(output)):
         ans+=((f(intput[i]).T-output[i])**2)
-    return np.sum(ans)/2
+    return np.sum(ans)/len(output)
 
 #Custom ticks to plot functions
 def myticks(x,pos):
