@@ -10,26 +10,43 @@ import csv
 import itertools
 import matplotlib.pyplot as plt
 
+
 def plotChart(dict_data,title):
-    lr=list(dict_data.keys())
+    neuron=list(dict_data.keys())
     val=list(dict_data.values())
+    train=[]
+    test=[]
+    for i,j in val:
+        train.append(i)
+        test.append(j)
     ind = np.arange(len(val))
     width = 0.35
     #Set up plot
 
     fig=plt.figure()
     ax = fig.add_subplot(111)
-    ax.bar(ind,val,width,label="% Rozpoznanych przypadków")
-    ax.set_xticks(ind )
-    ax.set_xticklabels(lr)
+    train_bar=ax.bar(ind,train,width,label="Zbiór treningowy")
+    test_bar=ax.bar(ind+width,test,width,label="Zbiór testowy")
+    ax.set_xticks(ind+width/2 )
+    ax.set_xticklabels(neuron)
     plt.xlabel("Ilosć neuronów")
-    #plt.ylabel("% Rozpoznanych przypadków")
+    plt.ylabel("% Rozpoznanych przypadków")
     plt.grid()
     plt.title(title)
+    def autolabel(rects):
+        """
+        Attach a text label above each bar displaying its height
+        """
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width()/2., 1.0*height,
+            '%d' % int(height),
+            ha='center', va='bottom')
+    autolabel(train_bar)
+    autolabel(test_bar)
     #Legend
-    plt.legend(loc='upper center',
-              ncol=3, fancybox=True, shadow=True)
-    plt.savefig(title+".png")
+    lgd=plt.legend()
+    plt.savefig(title+".png",bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 def getDataSep(intput):
     reader = csv.reader(intput)
@@ -50,29 +67,36 @@ def getDataSep(intput):
         out4.append(i[3])
         ans.append(ans_trans[i[4]])
 
-    return out1,out2,out3,out4,ans
+    return [out1,out2,out3,out4],ans
 
-def flatter(input):
-    if input>0.5:
-        return 1
-    else:
-        return 0
+def recognitionPerc(input,ans,nn):
+    good_ans=0
+    length=len(train_set)
+    for test in range(length):
+        t=np.round(nn.query(input[test]).T,0)
+        good_ans+=clas_test(ans_train[test],t)
+    return good_ans/length*100
 
 def clas_test(ans, target):
     return (ans==target).all()
 
 #train set
-    out1=[]
-    out2=[]
-    out3=[]
-    out4=[]
-    ans=[]
+out_train=[]
+ans_train=[]
 intput_file = open(sys.argv[1], "r+")
-out1,out2,out3,out4,ans=getDataSep(intput_file)
+out_train,ans_train=getDataSep(intput_file)
 intput_file.close()
-out=[out1,out2,out3,out4]
 
-test={1:30,5:60,9:80,12:96}
+#test set
+out_test=[]
+ans_test=[]
+intput_file = open(sys.argv[2], "r+")
+out_test,ans_test=getDataSep(intput_file)
+intput_file.close()
+
+test={1:[20,10],
+      5:[50,40],
+      17:[96,70]}
 plotChart(test,"title")
 iterable=[0,1,2,3]
 #input_numbres
@@ -84,13 +108,17 @@ for input_neuron_number in range(1,5):
     for ll in list_list:
         #prepare data
         train_set=[]
-        for k in range(len(out1)):
+        test_set=[]
+        for k in range(len(out_train[0])):
             #set of points to train
             train_tab=[]
+            test_tab=[]
             for kk in ll:
                 ##list kk, k element
-                train_tab.append(out[kk][k])
+                train_tab.append(out_train[kk][k])
+                test_tab.append(out_test[kk][k])
             train_set.append(train_tab)
+            test_set.append(test_tab)
 
         data_for_single_chart={}
         for hnodes in range(1,18,4):
@@ -104,24 +132,14 @@ for input_neuron_number in range(1,5):
                 #train single epoch
                 #k-point to train
                 for k in range(len(train_set)):
-                    nn.train(train_set[k],ans[k])
+                    nn.train(train_set[k],ans_train[k])
                 f=nn.query
-                error=MSE(f,train_set,ans)
-                '''if iter%1000==0:
-                    print("ERROR: ",error)
-                    print("LL: ",ll)
-                    print("iter: ",iter)
-                    print("hnodes: ",hnodes)'''
+                error=MSE(f,train_set,ans_train)
                 iter+=1
-            good=0
-            for test in range(len(train_set)):
-                t=np.round(nn.query(train_set[test]).T,0)
-                good+=clas_test(ans[test],t)
-                '''print("Network: ",t)
-                print("Ans:",ans[test])
-                print("Good?",clas_test(ans[test],t),"\n\n")'''
-            percent=good/len(train_set)*100
+            percent_train=recognitionPerc(train_set,ans_train,nn)
+            percent_test=recognitionPerc(test_set,ans_test,nn)
             print("hnodes: ",hnodes)
-            print("\nPERCENT: ",percent,"\n")
-            data_for_single_chart[hnodes]=percent
+            print("percent_train: ",percent_train)
+            print("percent_test: ",percent_test,"\n\n")
+            data_for_single_chart[hnodes]=[percent_train,percent_test]
         plotChart(data_for_single_chart,"Ilosć wejść-{0},kolumny-{1}".format(input_neuron_number,str(ll)))
