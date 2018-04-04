@@ -6,7 +6,6 @@ sys.path.insert(0,parentdir)
 from NeutralNetwork import NeutralNetwork
 from Functions import MSE
 import numpy as np
-import csv
 import itertools
 import matplotlib.pyplot as plt
 
