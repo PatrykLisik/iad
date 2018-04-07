@@ -53,7 +53,7 @@ def plotPointsOfDict(x,y,r_x,r_y,data,out):
         c2=plt.Circle([3,0],2,alpha=0.5)
         for red,blues in data.items():
             for b in blues:
-                plt.plot([red[0],b[0]],[red[1],b[1]],'k-', lw=1)
+                plt.plot([red[0],b[0]],[red[1],b[1]],'--', lw=0.3,color="black")
 
         plt.xlim([-10,10])
         plt.ylim([-10,10])
@@ -64,7 +64,15 @@ def plotPointsOfDict(x,y,r_x,r_y,data,out):
 def dist(x1,y1,x2,y2):
     return np.sqrt((x1-x2)**2+(y1-y2)**2)
 
-def genRedBlack(red_X,red_Y,x,y):
+
+x,y=getPointsInCircle([-3,0],2,100)
+x1,y1=getPointsInCircle([3,0],2,100)
+x+=x1
+y+=y1
+
+red_X,red_Y=getPointsInSquare([0,0],10,4)
+
+for n in range(3):
     red_black={}
     for i in range(len(red_X)):
         red_black[(red_X[i],red_Y[i])]=[]
@@ -79,41 +87,19 @@ def genRedBlack(red_X,red_Y,x,y):
         a=min(dist_dict)
         red_black[(dist_dict[a][0],dist_dict[a][1])].append([x[i],y[i]])
 
+    plotPointsOfDict(x,y,red_X,red_Y,red_black,"k-średnie-iter{0}".format(n))
 
-
-x,y=getPointsInCircle([-3,0],2,100)
-x1,y1=getPointsInCircle([3,0],2,100)
-x+=x1
-y+=y1
-
-red_X,red_Y=getPointsInSquare([0,0],10,4)
-plotChart(x,y,red_X,red_Y,"aaaa")
-
-
-
-
-'''print("RED and BLUE: ")
-for red,blues in red_black.items():
-    print(red)
-    for b in blues:
-        print("   ",b)'''
-
-'''print("BLUE POINTS")
-for i in range(len(x)):
-    print(x[i],"  ",y[i])
-print("RED POINTS")
-for i in range(len(red_X)):
-    print(red_X[i],"  ",red_Y[i])'''
-plotPointsOfDict(x,y,red_X,red_Y,red_black,"ddddd")
-
-#new red points
-new_red_x=[]
-new_red_y=[]
-for r,blues in red_black.items():
-    x=[]
-    y=[]
-    for b in blues:
-        x.append(b[0])
-        y.append(b[1])
-    new_red_x.append(np.mean(x))
-    new_red_y.append(np.mean(y))
+    #new red points
+    new_red_x=[]
+    new_red_y=[]
+    for r,blues in red_black.items():
+        x_n=[]
+        y_n=[]
+        for b in blues:
+            x_n.append(b[0])
+            y_n.append(b[1])
+        if (len(x_n)>0 and len(y_n)>0):
+            new_red_x.append(np.mean(x_n))
+            new_red_y.append(np.mean(y_n))
+    red_X=new_red_x
+    red_Y=new_red_y
