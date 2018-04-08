@@ -27,34 +27,30 @@ def getPointsInSquare(center,radius,amount):
         ansY.append(randY)
     return ansX,ansY
 
-def plotChart(x,y,r_x,r_y,out):
-        #Set up plot
-        fig=plt.figure(figsize=(10,10))
-        ax = fig.add_subplot(111)
-        plt.grid()
-        ax.scatter(x,y,color='purple')
-        ax.scatter(r_x,r_y,color='red')
-        c1=plt.Circle([-3,0],2,alpha=0.5)
-        c2=plt.Circle([3,0],2,alpha=0.5)
-        plt.xlim([-10,10])
-        plt.ylim([-10,10])
-        ax.add_artist(c1)
-        ax.add_artist(c2)
-        plt.savefig(out)
+def plotChart(y,out):
+    #assume that one y in one iteration
+    x=range(len(y))
+    #Set up plot
+    fig=plt.figure(figsize=(10,10))
+    ax = fig.add_subplot(111)
+    plt.xlabel("Numer itercji")
+    plt.ylabel("Błąd kwantyzacji")
+    plt.yscale("log")
+    plt.grid()
+    plt.plot(x,y)
+    plt.savefig(out+"png")
 
 def animate(num,data,line,scat):
     #line.set_data(np.arange(0,num,0.01),np.sin(np.arange(0,num,0.01)))
     #plt.cla()
     plt.xlabel("Iteracja-{0}".format(num))
-    points_x=[]
-    points_y=[]
+    points_tab=[]
     for red,blues in data[num].items():
-        points_x.append(red[0])
-        points_y.append(red[1])
+        points_tab.append([red[0],red[1]])
         for b in blues:
             #plt.plot([red[0],b[0]],[red[1],b[1]],'--', lw=0.3,color="black")
             pass
-    scat.set_offset(points_x,points_y)
+    scat.set_offsets(points_tab)
     return (line,)
 
 def plotPointsOfDict(x,y,r_x,r_y,data,out):
@@ -65,7 +61,7 @@ def plotPointsOfDict(x,y,r_x,r_y,data,out):
     anim=fig.add_subplot(111)
     l, = plt.plot([], [], 'r-')
     plt.grid()
-    ax.scatter(x,y,color='purple')
+    ax.scatter(x,y,color='black')
     scat=ax.scatter([],[],color='red')
     c1=plt.Circle([-3,0],2,alpha=0.5)
     c2=plt.Circle([3,0],2,alpha=0.5)
@@ -80,6 +76,17 @@ def plotPointsOfDict(x,y,r_x,r_y,data,out):
 def dist(x1,y1,x2,y2):
     return np.sqrt((x1-x2)**2+(y1-y2)**2)
 
+'''
+expected input is dictioanry with quaintized(red) point as key
+and list of points that belongs to its
+'''
+def quantizationError(data):
+    error=0
+    for point,list in data.items():
+        for x in list:
+            #assume that dist is never negative
+            error+=dist(x[0],x[1],point[0],point[1])/len(list)
+    return error
 
 x,y=getPointsInCircle([-3,0],2,100)
 x1,y1=getPointsInCircle([3,0],2,100)
@@ -89,7 +96,9 @@ y+=y1
 red_X,red_Y=getPointsInSquare([0,0],10,4)
 
 list_of_red_black=[]
-for n in range(20):
+error_iter=[]
+
+while (1==1):
     red_black={}
     for i in range(len(red_X)):
         red_black[(red_X[i],red_Y[i])]=[]
@@ -104,6 +113,7 @@ for n in range(20):
         a=min(dist_dict)
         red_black[(dist_dict[a][0],dist_dict[a][1])].append([x[i],y[i]])
     list_of_red_black.append(red_black)
+    error_iter.append(quantizationError(red_black))
     #new red points
     new_red_x=[]
     new_red_y=[]
@@ -122,3 +132,4 @@ for n in range(20):
     red_Y=new_red_y
 
 plotPointsOfDict(x,y,red_X,red_Y,list_of_red_black,"k-średnie")
+plotChart(error_iter,"out")
