@@ -1,6 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
+import sys
+
+'''
+expected arguments
+-1 number of red popoints
+'''
 
 def getPointsInCircle(center,radius,amount):
     centerX=center[0]
@@ -38,7 +44,7 @@ def plotChart(y,out):
     plt.yscale("log")
     plt.grid()
     plt.plot(x,y)
-    plt.savefig(out+"png")
+    plt.savefig(out+".png")
 
 def animate(num,data,line,scat):
     #line.set_data(np.arange(0,num,0.01),np.sin(np.arange(0,num,0.01)))
@@ -88,12 +94,14 @@ def quantizationError(data):
             error+=dist(x[0],x[1],point[0],point[1])/len(list)
     return error
 
+n_of_red=int(sys.argv[1])
+
 x,y=getPointsInCircle([-3,0],2,100)
 x1,y1=getPointsInCircle([3,0],2,100)
 x+=x1
 y+=y1
 
-red_X,red_Y=getPointsInSquare([0,0],10,4)
+red_X,red_Y=getPointsInSquare([0,0],10,n_of_red)
 
 list_of_red_black=[]
 error_iter=[]
@@ -131,5 +139,5 @@ while (1==1):
     red_X=new_red_x
     red_Y=new_red_y
 
-plotPointsOfDict(x,y,red_X,red_Y,list_of_red_black,"k-średnie")
-plotChart(error_iter,"out")
+plotPointsOfDict(x,y,red_X,red_Y,list_of_red_black,"out{0}".format(n_of_red))
+plotChart(error_iter,"out{0}".format(n_of_red))
