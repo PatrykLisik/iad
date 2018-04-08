@@ -42,15 +42,19 @@ def plotChart(x,y,r_x,r_y,out):
         ax.add_artist(c2)
         plt.savefig(out)
 
-def animate(num,data,line):
+def animate(num,data,line,scat):
     #line.set_data(np.arange(0,num,0.01),np.sin(np.arange(0,num,0.01)))
     #plt.cla()
     plt.xlabel("Iteracja-{0}".format(num))
+    points_x=[]
+    points_y=[]
     for red,blues in data[num].items():
-        plt.scatter(red[0],red[1],color="red")
+        points_x.append(red[0])
+        points_y.append(red[1])
         for b in blues:
-            pass
             #plt.plot([red[0],b[0]],[red[1],b[1]],'--', lw=0.3,color="black")
+            pass
+    scat.set_offset(points_x,points_y)
     return (line,)
 
 def plotPointsOfDict(x,y,r_x,r_y,data,out):
@@ -61,16 +65,16 @@ def plotPointsOfDict(x,y,r_x,r_y,data,out):
     anim=fig.add_subplot(111)
     l, = plt.plot([], [], 'r-')
     plt.grid()
-    k_mean = animation.FuncAnimation(fig, animate, len(data), fargs=(data,l),
-    interval=1000, blit=True)
     ax.scatter(x,y,color='purple')
-    ax.scatter(r_x,r_y,color='red')
+    scat=ax.scatter([],[],color='red')
     c1=plt.Circle([-3,0],2,alpha=0.5)
     c2=plt.Circle([3,0],2,alpha=0.5)
     plt.xlim([-10,10])
     plt.ylim([-10,10])
     ax.add_artist(c1)
     ax.add_artist(c2)
+    k_mean = animation.FuncAnimation(fig, animate, len(data), fargs=(data,l,scat),
+    interval=1000, blit=True)
     k_mean.save(out+".gif", writer='imagemagick')
 
 def dist(x1,y1,x2,y2):
