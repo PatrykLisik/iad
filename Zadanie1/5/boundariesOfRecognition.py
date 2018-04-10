@@ -34,7 +34,7 @@ def getDataSep(intput):
 
 def plotChart(nn,train,test,out):
     y_min=0
-    y_max=6
+    y_max=7
     x_min=0.5
     x_max=9
     step=0.015
@@ -130,12 +130,16 @@ for ll in list_list:
     for k in range(len(out_train[0])):
         #set of points to train
         train_tab=[]
-        test_tab=[]
         for kk in ll:
             ##list kk, k element
             train_tab.append(out_train[kk][k])
-            test_tab.append(out_test[kk][k])
         train_set.append(train_tab)
+    for k in range(len(out_test[0])):
+        #set of points to train
+        test_tab=[]
+        for kk in ll:
+            ##list kk, k element
+            test_tab.append(out_test[kk][k])
         test_set.append(test_tab)
     iter=0
     input_nodes = 2
