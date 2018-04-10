@@ -32,3 +32,6 @@ def getData(intput):
         outX.append(i[0:-1])
         outY.append(i[-1])
     return outX,outY
+
+def round(x):
+    return float("{0:.3f}".format(x))
