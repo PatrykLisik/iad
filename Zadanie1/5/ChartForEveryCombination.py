@@ -120,7 +120,7 @@ for input_neuron_number in range(1,5):
             percent_train_tab=[]
             percent_test_tab=[]
             iter_tab=[]
-            while iter_n<10**3:
+            while iter_n<4*10**3:
                 #train single epoch
                 #k-point to train
                 for k in range(len(train_set)):
@@ -132,7 +132,8 @@ for input_neuron_number in range(1,5):
                 #Compute error
                 percent_train=recognitionPerc(train_set,ans_train,nn)
                 percent_test=recognitionPerc(test_set,ans_test,nn)
-                if(iter_n%150==0):
+                if(iter_n%333==0):
+                    print("iter_n",iter_n)
                     print("hidden_nodes",hidden_nodes)
                     print("error",error)
                     print("percent_train",percent_train)
