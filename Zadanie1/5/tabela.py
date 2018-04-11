@@ -4,38 +4,11 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir)
 from NeutralNetwork import NeutralNetwork
-from Functions import MSE,myticks
+from Functions import MSE,round
 import numpy as np
 import itertools
-import matplotlib.pyplot as plt
-from matplotlib import ticker
-from matplotlib.pyplot import cm
 import csv
 
-
-def plotChart(data,title):
-    #colors=iter(cm.Set1(np.linspace(0,1,len(data))))
-    colors=iter(cm.Dark2(np.linspace(0,1,len(data))))
-    fig=plt.figure(figsize=(20,10))
-    ax = fig.add_subplot(111)
-    ax.xaxis.set_major_formatter(ticker.FuncFormatter(myticks))
-    plt.grid()
-    #plt.yscale("log")
-    plt.xlabel("Ilość iteracji",fontsize="xx-large")
-    plt.ylabel("%Rozpoznanych przypadków", fontsize="xx-large")
-
-    #lists=[iter_n,train_percentage,test_percentage]
-    for n_of_neurons,lists in data.items():
-        c=next(colors)
-        ax.plot(lists[0],lists[1],color=c,
-                label="Ilość neuronow {0}".format(n_of_neurons))
-        ax.plot(lists[0],lists[2],color=c,linestyle=":",
-                label="Ilość neuronow {0}".format(n_of_neurons))
-    legend = plt.legend(loc='upper center',bbox_to_anchor=(0.5, -0.1),
-              ncol=3, fancybox=True, shadow=True)
-    legend.get_frame()
-    plt.title(title)
-    plt.savefig(title+".png",bbox_extra_artists=(legend,), bbox_inches='tight')
 
 def getDataSep(intput):
     reader = csv.reader(intput)
@@ -83,7 +56,17 @@ intput_file = open(sys.argv[2], "r+")
 out_test,ans_test=getDataSep(intput_file)
 intput_file.close()
 
+
 iterable=[0,1,2,3]
+
+
+results=[]
+headline=("Ilość neuronów","Numery kolumn z danymi","Średni błąd - zbiór treningowy","Średni błąd - zbiór testowy",
+                "Średnie odchylenie standarowe błąd - zbiór treningowy","Średnie odchylenie standarowe - zbiór testowy")
+results.append(headline)
+print(headline)
+
+
 #input_numbres
 for input_neuron_number in range(1,5):
 
@@ -109,40 +92,47 @@ for input_neuron_number in range(1,5):
                 test_tab.append(out_test[kk][k])
             test_set.append(test_tab)
 
-        data_for_single_chart={}
         for hnodes in range(1,18,4):
-            iter_n=0
             input_nodes = input_neuron_number
             hidden_nodes = hnodes
             output_nodes = 3
             learningrate = 0.1
             nn = NeutralNetwork(input_neuron_number, hidden_nodes, output_nodes)
-            percent_train_tab=[]
-            percent_test_tab=[]
-            iter_tab=[]
-            while iter_n<4*10**3:
-                #train single epoch
-                #k-point to train
-                for k in range(len(train_set)):
-                    nn.train(train_set[k],ans_train[k])
-                f=nn.query
-                error=MSE(f,train_set,ans_train)
-                iter_n+=1
 
-                #Compute error
+            percent_test_tab=[]
+            percent_train_tab=[]
+            for loop in range(100):
+                iter=0
+                while iter<3*10**3:
+                    #train single epoch
+                    #k-point to train
+                    for k in range(len(train_set)):
+                        nn.train(train_set[k],ans_train[k])
+                    f=nn.query
+                    iter+=1
+                #Compute percentage
                 percent_train=recognitionPerc(train_set,ans_train,nn)
                 percent_test=recognitionPerc(test_set,ans_test,nn)
-                if(iter_n%333==0):
-                    print("iter_n",iter_n)
-                    print("hidden_nodes",hidden_nodes)
-                    print("error",error)
-                    print("percent_train",percent_train)
-                    print("percent_test",percent_test)
-                #Paste to table
-                percent_train_tab.append(percent_train)
+                #Add to list
                 percent_test_tab.append(percent_test)
-                iter_tab.append(iter_n)
-            print("hnodes: ",hnodes)
-            data_for_single_chart[hnodes]=[iter_tab,percent_train_tab,percent_test_tab]
-        print("Chart plotting")
-        plotChart(data_for_single_chart,"Ilosć wejść-{0},kolumny-{1}".format(input_neuron_number,str(ll)))
+                percent_train_tab.append(percent_train)
+
+            #Means
+            error_test_mean=np.mean(percent_test_tab)
+            error_train_mean=np.mean(percent_train_tab)
+            #Std by default is population std ddof=1 is sample std
+            error_test_std=np.std(percent_test_tab,ddof=1)
+            error_train_std=np.std(percent_train_tab,ddof=1)
+
+            #Make tuple and append to result
+            tuple_to_append=(hidden_nodes,error_train_mean,
+                             error_test_mean,error_train_std,error_test_std)
+            tuple_to_append=tuple(map(round,tuple_to_append))
+            final_tuple=([tuple_to_append[0]]+list(ll)+list(tuple_to_append[1:]))
+            results.append(final_tuple)
+            print(final_tuple)
+
+
+with open("TabelaNa5plik.csv", "w") as f:
+    writer = csv.writer(f)
+    writer.writerows(results)
