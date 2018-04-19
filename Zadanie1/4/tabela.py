@@ -42,12 +42,12 @@ activation_function_output=lambda x: x
 dactivation_function_output=lambda x: 1
 for hidden_nodes_n in range(1,20,3):
     hidden_nodes = hidden_nodes_n
-    nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes,
-                        learningrate,bias,momentum,activation_function_output,
-                        dactivation_function_output)
     error_test_tab=[]
     error_train_tab=[]
     for loop in range(100):
+        nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes,
+                            learningrate,bias,momentum,activation_function_output,
+                            dactivation_function_output)
         i=0
         while i<number_of_iter:
             for j in range(len(train_input_list)):
