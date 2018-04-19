@@ -32,28 +32,62 @@ def getDataSep(intput):
     return [out1,out2,out3,out4],ans
 
 
-def plotChart(nn,train,test,out):
+def plotChart(nn,train,test,train_ans,test_ans,out):
     y_min=0
     y_max=7
     x_min=0.5
     x_max=9
-    step=0.015
+    step=0.0015
     all_points=[]
     for x in np.arange(x_min,x_max,step):
         for y in np.arange(y_min,y_max,step):
             all_points.append([x,y])
             #print(all_points)
-    print("FLAG1")
     green_x=[] # obj 1
     green_y=[] # obj 1
     blue_x=[] # obj 2
     blue_y=[] # obj 2
     red_x=[] #obj 3
     red_y=[] #obj 3
-    white_x=[] # none
-    white_y=[] # none
+
+    ans_green_x=[]
+    ans_green_y=[]
+    ans_red_x=[]
+    ans_red_y=[]
+    ans_blue_x=[]
+    ans_blue_y=[]
+    for i in range(len(train_ans)):
+        if train_ans[i]==[1, 0, 0]:
+            ans_green_x.append(train[i][0])
+            ans_green_y.append(train[i][1])
+        if train_ans[i]==[0, 1, 0]:
+            ans_blue_x.append(train[i][0])
+            ans_blue_y.append(train[i][1])
+        if train_ans[i]==[0, 0, 1]:
+            ans_red_x.append(train[i][0])
+            ans_red_y.append(train[i][1])
+
+    test_green_x=[]
+    test_green_y=[]
+    test_red_x=[]
+    test_red_y=[]
+    test_blue_x=[]
+    test_blue_y=[]
+    wrong_x =[]
+    wrong_y=[]
+    for i in range(len(test_ans)):
+        print(test_ans[i])
+        if test_ans[i]==[1, 0, 0]:
+            print("Point")
+            test_green_x.append(test[i][0])
+            test_green_y.append(test[i][1])
+        if test_ans[i]==[0, 1, 0]:
+            test_blue_x.append(test[i][0])
+            test_blue_y.append(test[i][1])
+        if test_ans[i]==[0, 0, 1]:
+            test_red_x.append(test[i][0])
+            test_red_y.append(test[i][1])
     #Clasification
-    print("FLAG2")
     for point in all_points:
         t=np.round(nn.query(point).T,0)
         if (t==[1,0,0]).all():
@@ -66,9 +100,8 @@ def plotChart(nn,train,test,out):
             red_x.append(point[0])
             red_y.append(point[1])
         else:
-            white_x.append(point[0])
-            white_y.append(point[1])
-    print("FLAG3")
+            wrong_x .append(point[0])
+            wrong_y.append(point[1])
     #Split train
     train_x=[]
     train_y=[]
@@ -88,12 +121,21 @@ def plotChart(nn,train,test,out):
     #plt.ylim([0,0.02])
     #plt.xscale("log")
     #plt.yscale("log")
-    plt.scatter(green_x,green_y,color='green', s=20,label="obiekt 1")
-    plt.scatter(blue_x,blue_y,color='blue', s=20,label="obiekt 2")
-    plt.scatter(red_x,red_y,color='red', s=20,label="obiekt 3")
-    plt.scatter(white_x,white_y,color='gold', s=20,label="bład identyfikacji")
-    plt.scatter(train_x,train_y,color='white', s=20,label="punkty treningowe")
-    plt.scatter(test_x,test_y,color='black', s=20,label="punkty testowe")
+    alpha=0.12
+    #Plot nn output
+    plt.scatter(green_x,green_y,color='green', alpha=alpha,s=20,label="obiekt 1")
+    plt.scatter(blue_x,blue_y,color='blue', alpha=alpha,s=20,label="obiekt 2")
+    plt.scatter(red_x,red_y,color='red', alpha=alpha,s=20,label="obiekt 3")
+    plt.scatter(wrong_x ,wrong_y,color='gold',alpha=alpha, s=20,label="bład identyfikacji")
+
+    #Plot traing points
+    plt.scatter(ans_green_x,ans_green_y,color='green',marker="X", s=20,label="punkty treningowe - 1")
+    plt.scatter(ans_blue_x,ans_blue_y,color='blue',marker="X", s=20,label="punkty treningowe - 2")
+    plt.scatter(ans_red_x,ans_red_y,color='red', marker="X",s=20,label="punkty treningowe - 3")
+    #Plot test points
+    plt.scatter(test_green_x,test_green_y,color='green',marker="D", s=20,label="punkty testowe - 1")
+    plt.scatter(test_blue_x,test_blue_y,color='blue',marker="D", s=20,label="punkty testowe - 2")
+    plt.scatter(test_red_x,test_red_y,color='red',marker="D", s=20,label="punkty testowe - 3")
 
     #plt.xlabel("Number of iterations",fontsize="xx-large")
     #plt.ylabel("Mean squared error", fontsize="xx-large")
@@ -143,7 +185,7 @@ for ll in list_list:
         test_set.append(test_tab)
     iter=0
     input_nodes = 2
-    hidden_nodes = 18
+    hidden_nodes = 17
     output_nodes = 3
     learningrate = 0.1
     nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes)
@@ -155,4 +197,4 @@ for ll in list_list:
         f=nn.query
         error=MSE(f,train_set,ans_train)
         iter+=1
-    plotChart(nn,train_set,test_set,"Granice_decyzyjne"+str(ll))
+    plotChart(nn,train_set,test_set,ans_train,ans_test,"Granice_decyzyjne"+str(ll))
