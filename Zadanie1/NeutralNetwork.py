@@ -20,6 +20,10 @@ class NeutralNetwork:
         self.activation_function = lambda x: scipy.special.expit(x)
         self.activation_function_output=activation_function_output
         self.dactivation_function_output=dactivation_function_output
+        self.who_back=0
+        self.wih_back=0
+        self.bih_back=0
+        self.bho_back=0
         pass
     def train(self, input_list, target_list):
         inputs=numpy.array(input_list, ndmin=2).T
@@ -36,18 +40,30 @@ class NeutralNetwork:
         output_errors = targets - final_outputs
         hidden_errors = numpy.dot(self.who.T, output_errors)
 
-        who_back=self.who # momentum
         self.who += self.lr * numpy.dot((output_errors * self.dactivation_function_output(final_outputs)),
                                         numpy.transpose(hidden_outputs))
-        self.who+=(who_back*self.momentum)# momentum
+        # momentum
+        self.who+=(self.who_back*self.momentum)
+        self.who_back=self.lr * numpy.dot((output_errors * self.dactivation_function_output(final_outputs)),
+                                        numpy.transpose(hidden_outputs))
         self.bho += self.lr * output_errors * self.dactivation_function_output(final_outputs)*self.bias_switch
+        self.bho += self.bho_back*self.momentum
+        self.bho_back = self.lr * output_errors * self.dactivation_function_output(final_outputs)*self.bias_switch
+        self.bho *= self.bias_switch
 
-        wih_back=self.wih # momentum
         self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs *
                                         (1.0 - hidden_outputs)),numpy.transpose(inputs))
-        self.wih+=self.wih*self.momentum# momentum
+        #momnetum int-hidd
+        self.wih+=self.momentum*self.wih_back
+        # momentum
+        self.wih_back=self.lr * numpy.dot((hidden_errors * hidden_outputs *
+                                        (1.0 - hidden_outputs)),numpy.transpose(inputs))
+
+        #momentum bias-int hidd
 
         self.bih += self.lr * hidden_errors * hidden_outputs * (1.0 - hidden_outputs)
+        self.bih +=self.bih_back * self.momentum
+        self.bih_back= self.lr * hidden_errors * hidden_outputs * (1.0 - hidden_outputs)
         self.bih*=self.bias_switch
 
     def query(self, input_list):
