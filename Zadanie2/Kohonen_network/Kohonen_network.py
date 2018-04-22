@@ -7,10 +7,11 @@ import numpy as np
 class KohonenNetwork:
     """Implementation of n-dimmensional kohonen network"""
 
-    def __init__(self, dim_newtork, dist_func_points, net_dist_to_lr,
-                 points_to_aprox):
+    def __init__(self, points_number, dim_network, dist_func_points,
+                 net_dist_to_lr, points_to_aprox):
         """
         Args:
+            points_number: number of points to approximate
             dinm_network: number of dimmensions of network organization
             dist_func: callable objest that takes two points of from
                         points_to_aprox and returns distance beetwen them
@@ -19,7 +20,15 @@ class KohonenNetwork:
                             argument WTA nad WTM approach can be achived
             points_to_aprox: list of points to perform approximation on
         """
-        pass
+        self.neurons = self._genreteStartNeurons(points_number, dim_network)
+        # compute distnce between points in space
+        self.dist_points = dist_func_points
+        # Convert distnce to lr multipler
+        self.dist_net_to_lr = net_dist_to_lr
+        # compute distance beetwen points in network
+        self.dist_net = dist_func_points
+        # Learnning rate to start
+        self.lr = 0.25
 
     def iter_once(self):
         """
