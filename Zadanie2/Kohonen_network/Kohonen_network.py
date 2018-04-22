@@ -1,3 +1,6 @@
+import itertools
+import math
+
 import numpy as np
 
 
@@ -18,7 +21,7 @@ class KohonenNetwork:
         """
         pass
 
-    def iter_once():
+    def iter_once(self):
         """
         Performs one iteration of approximation of network
         Returns:
@@ -27,15 +30,15 @@ class KohonenNetwork:
         """
         pass
 
-    def _random_point(n):
+    def _random_point(self, n):
         """
         Generete random point in n-dimensional space
         Returns:
                 n- element tuple of random 32-bit floats
         """
-        pass
+        return tuple(np.random.rand(n, 1))
 
-    def _getLR(posNWinner, posNOther):
+    def _getLR(self, posNWinner, posNOther):
         """
         Private method that compute how much posNOther neuron should be moved
         toward point
@@ -52,3 +55,25 @@ class KohonenNetwork:
             Float number grater than 0
         """
         pass
+
+    def _genreteStartNeurons(self, enctrance_number, dim_number):
+        """
+        Private method that generate random starting points of network
+        Args:
+            enctrance_number: number of entrances in output
+            dim_number: number dimmensions of neuron network
+        Return:
+                Dictioanry of tuple to tuple
+                {(Pos_in_netowrk):(Pos_in_space)}
+        """
+
+        ans = {}
+        entry_counter = 0
+        mx = math.ceil(math.pow(enctrance_number, 1 / dim_number))
+        # x is tuple of params in n-dimensional space
+        for x in itertools.product(range(mx), repeat=dim_number):
+            if entry_counter == enctrance_number:
+                break
+            ans[x] = self._random_point(dim_number)
+            entry_counter += 1
+        return ans
