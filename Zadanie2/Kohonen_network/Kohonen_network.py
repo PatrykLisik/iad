@@ -27,8 +27,10 @@ class KohonenNetwork:
         self.dist_net_to_lr = net_dist_to_lr
         # compute distance beetwen points in network
         self.dist_net = dist_func_points
-        # Learnning rate to start
+        # Learnning rate
         self.lr = 0.25
+        # Iteration counter
+        self.iter_count = 0
 
     def iter_once(self):
         """
@@ -63,7 +65,18 @@ class KohonenNetwork:
         Returns:
             Float number grater than 0
         """
-        pass
+        dist = self.dist_net(posNWinner, posNOther)
+        ans = self.lr * self.dist_net_to_lr(dist)
+        self._updateLr()
+        return ans
+
+    def _updateLr(self):
+        """
+        Private method that decrese learning rate
+        """
+
+        # This migth be suboptimal function
+        self.lr /= 1.3
 
     def _genreteStartNeurons(self, enctrance_number, dim_number):
         """
