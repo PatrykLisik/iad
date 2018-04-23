@@ -1,5 +1,6 @@
 import itertools
 import math
+import sys
 
 import numpy as np
 
@@ -31,15 +32,43 @@ class KohonenNetwork:
         self.lr = 0.25
         # Iteration counter
         self.iter_count = 0
+        # Points list to perfrom operation on
+        self.points_to_aprox = points_to_aprox
 
     def iter_once(self):
         """
-        Performs one iteration of approximation of network
-        Returns:
-                Dictioanry of tuple to tuple
-                {(Pos_in_netowrk):(Pos_in_space)}
+        Iterate over every given point and adjust neurons
         """
-        pass
+        for point in self.points_to_aprox:
+            colsest = self._find_closest_neuron(point)
+            self._update_neurons_space_posisions(colsest)
+
+    def _find_closest_neuron(self, point):
+        """
+        Args:
+            point: n-element tuple that represents point in space
+        Returns:
+            k-elemnt tuple that reprezents neuron position in neuron network
+        """
+        # tuple to returns
+        ans = ()
+        # init min with its max value
+        min_dist = sys.float_info.max
+        for pos_net, pos_space in self.neurons.items():
+            # distance beteween particular neuron and point
+            dist = self.dist_points(pos_space, point)
+            if min_dist < dist:
+                min_dist = dist
+                ans = pos_net
+        return ans
+
+    def _update_neurons_space_posisions(self, winner):
+        """
+        Update posioson of all neurons based on posion of winner and function
+        dist_net_to_lr
+        """
+        for pos_net, pos_space in self.neurons.items():
+            self.neurons[pos_net] *= self._getLR(winner, pos_space)
 
     def _random_point(self, n):
         """
