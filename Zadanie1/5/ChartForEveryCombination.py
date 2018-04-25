@@ -8,15 +8,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import ticker
 from matplotlib.pyplot import cm
-from common import getDataSep, recognitionPerc
-
-from Functions import MSE, myticks
-from NeutralNetwork import NeutralNetwork
 
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
+
+from common import getDataSep, recognitionPerc
+from Functions import MSE, myticks
+from NeutralNetwork import NeutralNetwork
 
 
 def plotChart(data, title):
