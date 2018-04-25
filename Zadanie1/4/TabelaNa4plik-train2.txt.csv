@@ -1,0 +1,8 @@
+Number of neuron,Średni błąd - zbiór treningowy,Średni błąd - zbiór testowy,Średnie odchylenie standarowe błąd - zbiór treningowy,Średnie odchylenie standarowe - zbiór testowy
+1.0,1.796,1.615,0.005,0.021
+4.0,1.439,0.897,0.178,0.259
+7.0,1.301,0.718,0.125,0.08
+10.0,1.273,0.807,0.111,0.168
+13.0,1.274,0.849,0.107,0.164
+16.0,1.252,0.89,0.107,0.129
+19.0,1.197,0.956,0.102,0.133
