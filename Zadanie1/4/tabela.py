@@ -6,13 +6,14 @@ import sys
 
 import numpy as np
 
-from Functions import MSE, getData, round
-from NeutralNetwork import NeutralNetwork
-
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
+
+from Functions import MSE, getData, round
+from NeutralNetwork import NeutralNetwork
+
 
 # train set
 train_input_list = []
@@ -58,7 +59,8 @@ for hidden_nodes_n in range(1, 20, 3):
     error_train_tab = []
     for loop in range(100):
         nn = NeutralNetwork(input_nodes, hidden_nodes, output_nodes,
-                            learningrate, bias, momentum, activation_function_output,
+                            learningrate, bias, momentum,
+                            activation_function_output,
                             dactivation_function_output)
         i = 0
         while i < number_of_iter:
