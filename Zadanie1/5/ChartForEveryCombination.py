@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import ticker
 from matplotlib.pyplot import cm
+from common import getDataSep, recognitionPerc
 
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from common import getDataSep, recognitionPerc
 from Functions import MSE, myticks
 from NeutralNetwork import NeutralNetwork
 
@@ -29,7 +29,7 @@ def plotChart(data, title):
     # plt.yscale("log")
     plt.xlabel("Ilość iteracji", fontsize="xx-large")
     plt.ylabel("%Rozpoznanych przypadków", fontsize="xx-large")
-    plt.xlim([0, 100])
+    plt.ylim([0, 100])
 
     # lists=[iter_n,train_percentage,test_percentage]
     for n_of_neurons, lists in data.items():
@@ -87,7 +87,7 @@ for input_neuron_number in range(1, 5):
             test_set.append(test_tab)
 
         data_for_single_chart = {}
-        for hnodes in range(17, 18):
+        for hnodes in range(1, 18, 4):
             iter_n = 0
             input_nodes = input_neuron_number
             hidden_nodes = hnodes
@@ -98,7 +98,7 @@ for input_neuron_number in range(1, 5):
             percent_train_tab = []
             percent_test_tab = []
             iter_tab = []
-            while iter_n < 4 * 10**3:
+            while iter_n < 2 * 10**3:
                 # train single epoch
                 # k-point to train
                 for k in range(len(train_set)):
@@ -110,12 +110,6 @@ for input_neuron_number in range(1, 5):
                 # Compute error
                 percent_train = recognitionPerc(train_set, ans_train, nn)
                 percent_test = recognitionPerc(test_set, ans_test, nn)
-                if(iter_n % 333 == 0):
-                    print("iter_n", iter_n)
-                    print("hidden_nodes", hidden_nodes)
-                    print("error", error)
-                    print("percent_train", percent_train)
-                    print("percent_test", percent_test)
                 # Paste to table
                 percent_train_tab.append(percent_train)
                 percent_test_tab.append(percent_test)
