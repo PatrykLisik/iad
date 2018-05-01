@@ -42,7 +42,7 @@ def netToAns(target):
     index_max = -1
     # find index_max
     for i in range(len(target)):
-        if (target[i] == max).all():
+        if target[i] == max:
             index_max = i
     # Change index max to 1 and rest to 0
     for i in range(len(target)):
