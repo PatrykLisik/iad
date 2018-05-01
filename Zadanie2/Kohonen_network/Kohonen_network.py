@@ -1,6 +1,7 @@
 import itertools
 import math
 import sys
+import operator
 
 import numpy as np
 
@@ -42,6 +43,7 @@ class KohonenNetwork:
         for point in self.points_to_aprox:
             colsest = self._find_closest_neuron(point)
             self._update_neurons_space_posisions(colsest)
+        self._updateLr()
 
     def _find_closest_neuron(self, point):
         """
@@ -51,13 +53,15 @@ class KohonenNetwork:
             k-elemnt tuple that reprezents neuron position in neuron network
         """
         # tuple to returns
-        ans = ()
+        ans = []
         # init min with its max value
         min_dist = sys.float_info.max
         for pos_net, pos_space in self.neurons.items():
             # distance beteween particular neuron and point
+            print("pos_space: ", pos_space)
+            print("point: ", point)
             dist = self.dist_points(pos_space, point)
-            if min_dist < dist:
+            if min_dist > dist:
                 min_dist = dist
                 ans = pos_net
         return ans
@@ -68,15 +72,22 @@ class KohonenNetwork:
         dist_net_to_lr
         """
         for pos_net, pos_space in self.neurons.items():
-            self.neurons[pos_net] *= self._getLR(winner, pos_space)
+            print("self.neurons[pos_net] ", self.neurons[pos_net])
+            lr = self._getLR(winner, pos_space)
+            # elementwise multiplication on tuple
+            update_vals = tuple(map(lr.__mul__,
+                                    self.neurons[pos_net]))
+            # elementwise add on tuple
+            self.neurons[pos_net] = tuple(
+                map(operator.add, update_vals, self.neurons[pos_net]))
 
     def _random_point(self, n):
         """
         Generete random point in n-dimensional space
         Returns:
-                n- element tuple of random 32-bit floats
+                n - element tuple of random 32-bit floats
         """
-        return tuple(np.random.rand(n, 1))
+        return tuple(np.random.rand(1, n)[0])
 
     def _getLR(self, posNWinner, posNOther):
         """
@@ -96,7 +107,6 @@ class KohonenNetwork:
         """
         dist = self.dist_net(posNWinner, posNOther)
         ans = self.lr * self.dist_net_to_lr(dist)
-        self._updateLr()
         return ans
 
     def _updateLr(self):
