@@ -30,11 +30,12 @@ class KohonenNetwork:
         # compute distance beetwen points in network
         self.dist_net = dist_func_points
         # Learnning rate
-        self.lr = 0.25
+        self.lr = 0.1
         # Iteration counter
         self.iter_count = 0
         # Points list to perfrom operation on
         self.points_to_aprox = points_to_aprox
+        self.R = 0
 
     def iter_once(self):
         """
@@ -42,7 +43,7 @@ class KohonenNetwork:
         """
         for point in self.points_to_aprox:
             colsest = self._find_closest_neuron(point)
-            self._update_neurons_space_posisions(colsest)
+            self._update_neurons_space_posisions(colsest, point)
         self._updateLr()
 
     def _find_closest_neuron(self, point):
@@ -58,25 +59,28 @@ class KohonenNetwork:
         min_dist = sys.float_info.max
         for pos_net, pos_space in self.neurons.items():
             # distance beteween particular neuron and point
-            print("pos_space: ", pos_space)
-            print("point: ", point)
             dist = self.dist_points(pos_space, point)
             if min_dist > dist:
                 min_dist = dist
                 ans = pos_net
         return ans
 
-    def _update_neurons_space_posisions(self, winner):
+    def _update_neurons_space_posisions(self, winner, point):
         """
-        Update posioson of all neurons based on posion of winner and function
-        dist_net_to_lr
+        Update posioson of all neurons
+        Function takes winner and corresponding point
+
+        Args:
+            winner - tuple describing nuron in network
+            point - posion of point in space
         """
         for pos_net, pos_space in self.neurons.items():
-            print("self.neurons[pos_net] ", self.neurons[pos_net])
-            lr = self._getLR(winner, pos_space)
-            # elementwise multiplication on tuple
-            update_vals = tuple(map(lr.__mul__,
+            lr = self._getLR(winner, pos_net)
+            # distance beteetwen point and neuron in every dimmension
+            update_vals = tuple(map(operator.sub, point,
                                     self.neurons[pos_net]))
+            # every val is multiplied elementwise by lr
+            update_vals = tuple(map(lr.__mul__, update_vals))
             # elementwise add on tuple
             self.neurons[pos_net] = tuple(
                 map(operator.add, update_vals, self.neurons[pos_net]))
@@ -106,7 +110,7 @@ class KohonenNetwork:
             Float number grater than 0
         """
         dist = self.dist_net(posNWinner, posNOther)
-        ans = self.lr * self.dist_net_to_lr(dist)
+        ans = self.lr * self.dist_net_to_lr(self.R, dist)
         return ans
 
     def _updateLr(self):
@@ -115,7 +119,7 @@ class KohonenNetwork:
         """
 
         # This migth be suboptimal function
-        self.lr /= 1.3
+        self.lr /= 1.1
 
     def _genreteStartNeurons(self, enctrance_number, dim_number):
         """
