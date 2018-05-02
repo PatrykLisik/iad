@@ -2,7 +2,7 @@ import itertools
 import math
 import sys
 import operator
-
+from Fixed_size_queue import Fixed_size_queue
 import numpy as np
 
 
@@ -35,7 +35,10 @@ class KohonenNetwork:
         self.iter_count = 0
         # Points list to perfrom operation on
         self.points_to_aprox = points_to_aprox
+        # neighborhood radius is temporarily hardcoded to 0
         self.R = 0
+        # tired neurons
+        self.tired = Fixed_size_queue(points_number - 1)
 
     def iter_once(self):
         """
@@ -58,11 +61,16 @@ class KohonenNetwork:
         # init min with its max value
         min_dist = sys.float_info.max
         for pos_net, pos_space in self.neurons.items():
+            # skip if neuron won last time
+            if(self.tired.contains(pos_net)):
+                continue
             # distance beteween particular neuron and point
             dist = self.dist_points(pos_space, point)
             if min_dist > dist:
                 min_dist = dist
                 ans = pos_net
+        # add new winner
+        self.tired.append(ans)
         return ans
 
     def _update_neurons_space_posisions(self, winner, point):
@@ -79,7 +87,7 @@ class KohonenNetwork:
             # distance beteetwen point and neuron in every dimmension
             update_vals = tuple(map(operator.sub, point,
                                     self.neurons[pos_net]))
-            # every val is multiplied elementwise by lr
+            # every value is multiplied elementwise by lr
             update_vals = tuple(map(lr.__mul__, update_vals))
             # elementwise add on tuple
             self.neurons[pos_net] = tuple(
@@ -91,7 +99,8 @@ class KohonenNetwork:
         Returns:
                 n - element tuple of random 32-bit floats
         """
-        return tuple(np.random.rand(1, n)[0])
+        # bounds are temporarily hardcoded to -10,10
+        return tuple(np.random.uniform(low=-10, high=10, size=(n)))
 
     def _getLR(self, posNWinner, posNOther):
         """
