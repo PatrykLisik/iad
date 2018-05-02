@@ -22,7 +22,10 @@ class KohonenNetwork:
                             argument WTA nad WTM approach can be achived
             points_to_aprox: list of points to perform approximation on
         """
-        self.neurons = self._genreteStartNeurons(points_number, dim_network)
+        # assume that all points have same number of dimmensions
+        dimm_space = len(points_to_aprox[0])
+        self.neurons = self._genreteStartNeurons(
+            points_number, dim_network, dimm_space)
         # compute distnce between points in space
         self.dist_points = dist_func_points
         # Convert distnce to lr multipler
@@ -30,15 +33,15 @@ class KohonenNetwork:
         # compute distance beetwen points in network
         self.dist_net = dist_func_points
         # Learnning rate
-        self.lr = 0.1
+        self.lr = 0.5
         # Iteration counter
         self.iter_count = 0
         # Points list to perfrom operation on
         self.points_to_aprox = points_to_aprox
         # neighborhood radius is temporarily hardcoded to 0
-        self.R = 0
+        self.R = 1
         # tired neurons
-        self.tired = Fixed_size_queue(points_number - 1)
+        self.tired = Fixed_size_queue(2)
 
     def iter_once(self):
         """
@@ -130,12 +133,13 @@ class KohonenNetwork:
         # This migth be suboptimal function
         self.lr /= 1.1
 
-    def _genreteStartNeurons(self, enctrance_number, dim_number):
+    def _genreteStartNeurons(self, enctrance_number, dim_number_net,
+                             dim_number_space):
         """
         Private method that generate random starting points of network
         Args:
             enctrance_number: number of entrances in output
-            dim_number: number dimmensions of neuron network
+            dim_number_net: number dimmensions of neuron network
         Return:
                 Dictioanry of tuple to tuple
                 {(Pos_in_netowrk):(Pos_in_space)}
@@ -143,11 +147,11 @@ class KohonenNetwork:
 
         ans = {}
         entry_counter = 0
-        mx = math.ceil(math.pow(enctrance_number, 1 / dim_number))
+        mx = math.ceil(math.pow(enctrance_number, 1 / dim_number_net))
         # x is tuple of params in n-dimensional space
-        for x in itertools.product(range(mx), repeat=dim_number):
+        for x in itertools.product(range(mx), repeat=dim_number_net):
             if entry_counter == enctrance_number:
                 break
-            ans[x] = self._random_point(dim_number)
+            ans[x] = self._random_point(dim_number_space)
             entry_counter += 1
         return ans
