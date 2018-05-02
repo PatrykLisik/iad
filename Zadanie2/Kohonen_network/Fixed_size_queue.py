@@ -14,7 +14,7 @@ class Fixed_size_queue:
         """
         Append element to queue and delets the lase one
         """
-        self._data.insert(-1, obj)
+        self._data.insert(0, obj)
         self._data.pop()
 
     def contains(self, obj):
