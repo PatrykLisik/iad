@@ -1,5 +1,6 @@
 from .Self_organizing_map import Self_organizing_map
 import operator
+from collections import OrderedDict
 
 
 class Neuron_gas(Self_organizing_map):
@@ -18,10 +19,12 @@ class Neuron_gas(Self_organizing_map):
                             argument WTA nad WTM approach can be achived
             points_to_aprox: list of points to perform approximation on
         """
-        lazy_numer = points_number - 4
+        self.lazy_numer = 3
         super().__init__(points_number, neighborhood_radius, 1,
                          dist_func_points, net_dist_to_lr,
-                         points_to_aprox, lazy_numer)
+                         points_to_aprox, self.lazy_numer)
+        self.lr = 0.1
+        self.flag = 10
 
     # override
     def _update_neurons_space_posisions(self, winner, point):
@@ -33,10 +36,16 @@ class Neuron_gas(Self_organizing_map):
             winner - tuple describing nuron in network
             point - posion of point in space
         """
-        for pos_net, pos_space in self.neurons.items():
-            lr = self._getLR(winner, pos_space)
-            if pos_net == winner:
-                lr = 1.0
+        # generate sorted dict
+        # sort function is fucntion which gives distance
+        # between point and neruon
+        def dist_from_point(p): return self.dist_points(point, p[1])
+        sorted_neurons = OrderedDict(sorted(
+            self.neurons.items(),
+            key=dist_from_point))
+
+        for number, pos_net in enumerate(sorted_neurons.keys()):
+            lr = self._getLR((0,), (number,))
             # distance beteetwen point and neuron in every dimmension
             update_vals = tuple(map(operator.sub, point,
                                     self.neurons[pos_net]))
