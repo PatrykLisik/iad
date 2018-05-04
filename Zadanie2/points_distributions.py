@@ -37,3 +37,14 @@ def point_on_circumference(h, k, r):
 def circumference_dist(center, radius, amount):
     return [point_on_circumference(center[0], center[1], radius)
             for _ in range(amount)]
+
+
+def square_dist(center, radius, amount):
+    centerX = center[0]
+    centerY = center[1]
+    ans = []
+    while len(ans) < amount:
+        randX = np.random.uniform(centerX - radius, centerX + radius)
+        randY = np.random.uniform(centerY - radius, centerY + radius)
+        ans.append([randX, randY])
+    return ans
