@@ -46,7 +46,7 @@ def print_net(net):
     print()
 
 
-def quantization_error(neurons, points, dist_func):
+def quantization_error(neurons, points, dist_func=Euklides_dist):
     """
     Args:
         Neurons: list of neuron posion in space
@@ -62,7 +62,7 @@ def quantization_error(neurons, points, dist_func):
     return err / len(neurons)
 
 
-def quantization_error2(neurons, points, dist_func):
+def quantization_error2(neurons, points, dist_func=Euklides_dist):
     """
     Args:
         Neurons: list of neuron posion in space
@@ -77,3 +77,12 @@ def quantization_error2(neurons, points, dist_func):
         tcp = min(points, key=lambda p: dist_func(neuron, p))
         err += dist_func(neuron, tcp)
     return err / len(neurons)
+
+    def random_point(n):
+        """
+        Generete random point in n-dimensional space
+        Returns:
+                n - element tuple of random 32-bit floats
+        """
+        # bounds are temporarily hardcoded to -10,10
+        return tuple(np.random.uniform(low=-10, high=10, size=(n)))

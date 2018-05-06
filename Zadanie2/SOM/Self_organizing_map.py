@@ -1,6 +1,6 @@
 from .Fixed_size_queue import Fixed_size_queue
 import random
-import numpy as np
+from .functions import random_point as _random_point
 import itertools
 import math
 import sys
@@ -88,15 +88,6 @@ class Self_organizing_map(object):
     def _update_neurons_space_posisions(self, winner, point):
         pass
 
-    def _random_point(self, n):
-        """
-        Generete random point in n-dimensional space
-        Returns:
-                n - element tuple of random 32-bit floats
-        """
-        # bounds are temporarily hardcoded to -10,10
-        return tuple(np.random.uniform(low=-10, high=10, size=(n)))
-
     def _getLR(self, posNWinner, posNOther):
         """
         Private method that compute how much posNOther neuron should be moved
@@ -144,6 +135,6 @@ class Self_organizing_map(object):
         for x in itertools.product(range(mx), repeat=dim_number_net):
             if entry_counter == entrance_number:
                 break
-            ans[x] = self._random_point(dim_number_space)
+            ans[x] = _random_point(dim_number_space)
             entry_counter += 1
         return ans
