@@ -36,19 +36,6 @@ def GNF(R, distance):
     return np.exp(-(distance**2) / (2 * R**2))
 
 
-def getPointsInCircle(center, radius, amount):
-    centerX = center[0]
-    centerY = center[1]
-
-    ans = []
-    while len(ans) < amount:
-        randX = np.random.uniform(centerX - radius, centerX + radius)
-        randY = np.random.uniform(centerY - radius, centerY + radius)
-        if (centerX - randX)**2 + (centerY - randY)**2 < radius**2:
-            ans.append([randX, randY])
-    return ans
-
-
 def print_net(net):
     """
     Print network's neurons in console
@@ -57,3 +44,36 @@ def print_net(net):
         print("pos_net", pos_net)
         print("pos_space", pos_space)
     print()
+
+
+def quantization_error(neurons, points, dist_func):
+    """
+    Args:
+        Neurons: list of neuron posion in space
+        points: list of point posion in space
+        dist_func: callable object that compute distance in space
+    Return:
+        Mean of distances from every neuron to every point
+    """
+    err = 0
+    for neuron in neurons:
+        for point in points:
+            err += dist_func(neuron, point)
+    return err / len(neurons)
+
+
+def quantization_error2(neurons, points, dist_func):
+    """
+    Args:
+        Neurons: list of neuron posion in space
+        points: list of point posion in space
+        dist_func: callable object that compute distance in space
+    Return:
+        Mean of distances from every neuron to corresponding closest point
+    """
+    err = 0
+    for neuron in neurons:
+        # the closest point
+        tcp = min(points, key=lambda p: dist_func(neuron, p))
+        err += dist_func(neuron, tcp)
+    return err / len(neurons)
