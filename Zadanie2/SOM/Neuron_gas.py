@@ -1,13 +1,16 @@
 from .Self_organizing_map import Self_organizing_map
 import operator
 from collections import OrderedDict
+from .functions import Euklides_dist as E_dist
+from .functions import GNF
+import numpy as np
 
 
 class Neuron_gas(Self_organizing_map):
     """Implementation neuron gas"""
 
-    def __init__(self, points_number, neighborhood_radius, dist_func_points,
-                 net_dist_to_lr, points_to_aprox):
+    def __init__(self, points_number, points_to_aprox, neighborhood_radius=2,
+                 net_dist_to_lr=GNF, dist_func_points=E_dist):
         """
         Args:
             points_number: number of points to approximate
@@ -19,12 +22,12 @@ class Neuron_gas(Self_organizing_map):
                             argument WTA nad WTM approach can be achived
             points_to_aprox: list of points to perform approximation on
         """
-        self.lazy_numer = 3
+        # self.neighborhood_radius = int(points_number / 5) + 1
+        self.lazy_numer = int(np.sqrt(points_number))
         super().__init__(points_number, neighborhood_radius, 1,
                          dist_func_points, net_dist_to_lr,
                          points_to_aprox, self.lazy_numer)
-        self.lr = 0.1
-        self.flag = 10
+        self.lr = 0.2
 
     # override
     def _update_neurons_space_posisions(self, winner, point):
