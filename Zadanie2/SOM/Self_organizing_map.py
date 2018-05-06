@@ -39,7 +39,7 @@ class Self_organizing_map(object):
         # compute distance beetwen points in network
         self.dist_net = dist_func_points
         # Learnning rate
-        self.lr = 0.1
+        self.lr = 0.15
         # Iteration counter
         self.iter_count = 0
         # Points list to perfrom operation on
