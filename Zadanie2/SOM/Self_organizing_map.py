@@ -11,24 +11,21 @@ class Self_organizing_map(object):
     Abstarct class that generalize SOM
     """
 
-    def aa(self, s):
-        print("dad" + s)
-
     def __init__(self, points_number, neighborhood_radius, dim_network,
                  dist_func_points, net_dist_to_lr, points_to_aprox,
                  tired_number):
         """
         Args:
             points_number: number of points to approximate
-            dinm_network: number of dimmensions of network organization
-            dist_func: callable objest that takes two points of from
-                        points_to_aprox and returns distance beetwen them
-            net_dist_to_lr: callable object that takes posion of two neurons
-                            and returns leraning_rate_multiplayer. Throu this
-                            argument WTA nad WTM approach can be achived
+            dinm_network: number of dimensions of network organization
+            dist_func: callable object that takes two points of from
+                        points_to_aprox and returns distance between them
+            net_dist_to_lr: callable object that takes poison of two neurons
+                            and returns learning_rate_multiplier. Through this
+                            argument WTA nad WTM approach can be achieved
             points_to_aprox: list of points to perform approximation on
         """
-        # assume that all points have same number of dimmensions
+    # assume that all points have same number of dimmensions
         dimm_space = len(points_to_aprox[0])
         self.neurons = self._genreteStartNeurons(
             points_number, dim_network, dimm_space)
@@ -66,9 +63,8 @@ class Self_organizing_map(object):
         Args:
             point: n-element tuple that represents point in space
         Returns:
-            number that reprezents neuron position in neuron network
+            number that represents neuron position in neuron network
         """
-        # tuple to returns
         ans = []
         # init min with its max value
         min_dist = sys.float_info.max
@@ -76,7 +72,7 @@ class Self_organizing_map(object):
             # skip if neuron won last time
             if(self.tired.contains(pos_net)):
                 continue
-            # distance beteween particular neuron and point
+            # distance between particular neuron and point
             dist = self.dist_points(pos_space, point)
             if min_dist > dist:
                 min_dist = dist
@@ -90,17 +86,17 @@ class Self_organizing_map(object):
 
     def _getLR(self, posNWinner, posNOther):
         """
-        Private method that compute how much posNOther neuron should be moved
+        Private method that computes how much posNOther neuron should be moved
         toward point
-        Learnning rate sholud decreasing in iterations
-        Output sholud be the higest to case where posNWinner==posNOther is true
-        and be the smallest where distance beteetwen neurons in
-        network is the higest
+        Learning rate should decreasing in iterations
+        Output should be the highest to case where posNWinner==posNOther
+        and be the smallest where distance between neurons in
+        network is the highest
         Args:
-            posNWinner: tuple of n floats number desricbing posion in space
+            posNWinner: tuple of n floats number describing position in space
                         of winner-neuron(neuron which is the closest to point)
-            posNOther: tuple of n floats number desricbing posion in space of
-                        neuron which ins't the closest
+            posNOther: tuple of n floats number describing position in space of
+                        neuron which isn't the closest
         Returns:
             Float number grater than 0
         """
@@ -122,9 +118,9 @@ class Self_organizing_map(object):
         Private method that generate random starting points of network
         Args:
             entrance_number: number of entrances in output
-            dim_number_net: number dimmensions of neuron network
+            dim_number_net: number dimensions of neuron network
         Return:
-                Dictioanry of tuple to tuple
+                Dictionary of tuple to tuple
                 {(Pos_in_netowrk):(Pos_in_space)}
         """
 
