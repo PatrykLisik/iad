@@ -13,13 +13,15 @@ class K_menas():
         """
         Args:
             points_number: number of points to approximate
-            dinm_network: number of dimmensions of network organization
-            dist_func: callable objest that takes two points of from
-                        points_to_aprox and returns distance beetwen them
-            net_dist_to_lr: callable object that takes posion of two neurons
-                            and returns leraning_rate_multiplayer. Throu this
-                            argument WTA nad WTM approach can be achived
+            dinm_network: number of dimensions of network organization
+            dist_func: callable object that takes two points of from
+                        points_to_aprox and returns distance between them
+            net_dist_to_lr: callable object that takes poison of two neurons
+                            and returns learning_rate_multiplier. Through this
+                            argument WTA nad WTM approach can be achieved
             points_to_aprox: list of points to perform approximation on
+            neighborhood_radius: one of parameter of net_dist_to_lr
+            dist_func_points: function that return distnce between points
         """
         # self.neighborhood_radius = int(points_number / 5) + 1
         if(lazy_numer is None):
@@ -53,10 +55,10 @@ class K_menas():
 
     def move_centers(self):
         """
-        Deletes assing neurons posion to mean of therir points
+        Deletes assign neurons position to mean of their points
         """
         for old_pos, points in self.neurons.items():
-            # Don't do anything with dead neurons
+            # Don't do anything with tired neurons
             if(len(points) == 0):
                 break
             # compute new posion

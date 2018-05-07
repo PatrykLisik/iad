@@ -13,13 +13,15 @@ class Kohonen_network(Self_organizing_map):
         """
         Args:
             points_number: number of points to approximate
-            dinm_network: number of dimmensions of network organization
-            dist_func: callable objest that takes two points of from
-                        points_to_aprox and returns distance beetwen them
-            net_dist_to_lr: callable object that takes posion of two neurons
-                            and returns leraning_rate_multiplayer. Throu this
-                            argument WTA nad WTM approach can be achived
+            dinm_network: number of dimensions of network organization
+            dist_func: callable object that takes two points of from
+                        points_to_aprox and returns distance between them
+            net_dist_to_lr: callable object that takes poison of two neurons
+                            and returns learning_rate_multiplier. Through this
+                            argument WTA nad WTM approach can be achieved
             points_to_aprox: list of points to perform approximation on
+            neighborhood_radius: one of parameter of net_dist_to_lr
+            dist_func_points: function that return distnce between points
         """
         if(lazy_numer is None):
             self.lazy_numer = int(points_number / 10) + 1
@@ -33,20 +35,20 @@ class Kohonen_network(Self_organizing_map):
 
     def _update_neurons_space_posisions(self, winner, point):
         """
-        Update posioson of all neurons
+        Update position of all neurons
         Function takes winner and corresponding point
 
         Args:
-            winner - tuple describing nuron in network
-            point - posion of point in space
+            winner - tuple describing neuron in network
+            point - position of point in space
         """
         for pos_net, pos_space in self.neurons.items():
             lr = self._getLR(winner, pos_net)
-            # distance beteetwen point and neuron in every dimmension
+            # distance between point and neuron in every dimension
             update_vals = tuple(map(operator.sub, point,
                                     self.neurons[pos_net]))
-            # every value is multiplied elementwise by lr
+            # distance between point and neuron in every dimension
             update_vals = tuple(map(lr.__mul__, update_vals))
-            # elementwise add on tuple
+            # element-wise add on tuple
             self.neurons[pos_net] = tuple(
                 map(operator.add, update_vals, self.neurons[pos_net]))

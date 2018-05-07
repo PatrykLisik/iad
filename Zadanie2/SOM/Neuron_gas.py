@@ -15,13 +15,15 @@ class Neuron_gas(Self_organizing_map):
         """
         Args:
             points_number: number of points to approximate
-            dinm_network: number of dimmensions of network organization
-            dist_func: callable objest that takes two points of from
-                        points_to_aprox and returns distance beetwen them
-            net_dist_to_lr: callable object that takes posion of two neurons
-                            and returns leraning_rate_multiplayer. Throu this
-                            argument WTA nad WTM approach can be achived
+            dinm_network: number of dimensions of network organization
+            dist_func: callable object that takes two points of from
+                        points_to_aprox and returns distance between them
+            net_dist_to_lr: callable object that takes poison of two neurons
+                            and returns learning_rate_multiplier. Through this
+                            argument WTA nad WTM approach can be achieved
             points_to_aprox: list of points to perform approximation on
+            neighborhood_radius: one of parameter of net_dist_to_lr
+            dist_func_points: function that return distnce between points
         """
         # self.neighborhood_radius = int(points_number / 5) + 1
         if(lazy_numer is None):
@@ -53,7 +55,7 @@ class Neuron_gas(Self_organizing_map):
 
         for number, pos_net in enumerate(sorted_neurons.keys()):
             lr = self._getLR((0,), (number,))
-            # distance beteetwen point and neuron in every dimmension
+            # distance between point and neuron in every dimmension
             update_vals = tuple(map(operator.sub, point,
                                     self.neurons[pos_net]))
             # every value is multiplied elementwise by lr
