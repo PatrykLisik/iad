@@ -1,6 +1,7 @@
 from SOM.Neuron_gas import Neuron_gas as NG
 from SOM.Kohonen_network import Kohonen_network as KN
-from points_distributions import circumference_dist, triangle_dist, cirlce_dist
+from SOM.K_means import K_menas as KM
+from points_distributions import circumference_dist
 from points_distributions import square_dist
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
@@ -63,13 +64,14 @@ points += square_dist([-5, -5], 3, 200)
 
 Neuron_number = 10
 som = {"Gas_Neuronowy": NG,
-       "Siec_kohonena": KN}
+       "Siec_kohonena": KN,
+       "k-Srednie": KM}
 iter_number = 5
 for decription, type in som.items():
     map = type(Neuron_number, points)
     redInTime = []
     for _ in range(iter_number):
-        neuron_pos = list(map.neurons.values())
+        neuron_pos = list(map.getNeurons())
         redInTime.append(neuron_pos)
         map.iter_once()
     plot(points, redInTime, decription + "_in_time", decription)
