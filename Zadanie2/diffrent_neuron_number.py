@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from SOM.Kohonen_network import Kohonen_network as KN
 from SOM.Neuron_gas import Neuron_gas as NG
+from SOM.K_means import K_menas as KM
 from points_distributions import cirlce_dist, square_dist
 from points_distributions import triangle_dist, circumference_dist
 from SOM.functions import quantization_error2 as QErr
@@ -39,15 +40,20 @@ two.extend(circumference_dist([3, 3], 3, 400))
 two.extend(triangle_dist([0, 0], [0, 4], [-4, 0], 400))
 obj["circumference_square"] = two
 
+networks = {KN: "Siec_Kohonena",
+            NG: "Gas_neuronowy",
+            KM: "k-Srednie"}
+
+
 for desc, set in obj.items():
-    for som, name in zip([KN, NG], ["Siec_Kohonena", "Gas_neuronowy"]):
+    for som, name in networks.items():
         data = []
         for neuron_number in range(2, 21, 2):
             q_errs = []
             net = som(neuron_number, set)
             print("neuron_number: ", neuron_number)
             for _ in range(25):
-                err = QErr(net.neurons.values(), set, E_dist)
+                err = QErr(net.getNeurons(), set, E_dist)
                 q_errs.append(err)
                 net.iter_once()
             data.append(q_errs)
