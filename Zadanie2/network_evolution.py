@@ -28,11 +28,11 @@ def plot(black, redPointsInTime, out, title):
     for nr, (xy_cur, xy_next) in enumerate(zip(i1, i2)):
         label = "Iteracja nr {}".format(nr)
         xs_cur, ys_cur = zip(*xy_cur)
-        xs_next, xs_next = zip(*xy_next)
+        xs_next, ys_next = zip(*xy_next)
         color = next(colors)
         plt.plot([], [], color=color, label="iteracja {}".format(nr))
-        plt.scatter(xs_cur, ys_cur, color="red", s=10)
-        plt.scatter(xs_next, xs_next, color="red", s=10)
+        plt.scatter(xs_cur, ys_cur, color="red", s=20)
+        plt.scatter(xs_next, ys_next, color="red", s=20)
         for x_cur, y_cur, x_next, y_next in zip(xs_cur, ys_cur, xs_next, ys_next):
             plt.plot([x_cur, x_next], [y_cur, y_next],
                      color=color)
