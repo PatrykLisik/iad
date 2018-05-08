@@ -30,12 +30,13 @@ def plot(black, redPointsInTime, out, title):
         xs_cur, ys_cur = zip(*xy_cur)
         xs_next, ys_next = zip(*xy_next)
         color = next(colors)
-        plt.plot([], [], color=color, label="iteracja {}".format(nr))
+        plt.plot([], [], color=color, label="iteracja {}-{}".format(nr, nr + 1))
         plt.scatter(xs_cur, ys_cur, color="red", s=20)
         plt.scatter(xs_next, ys_next, color="red", s=20)
         for x_cur, y_cur, x_next, y_next in zip(xs_cur, ys_cur, xs_next, ys_next):
-            plt.plot([x_cur, x_next], [y_cur, y_next],
-                     color=color)
+            plt.arrow(x_cur, y_cur, x_next - x_cur,  y_next - y_cur,
+                      color=color, head_width=0.15, head_length=0.25,
+                      length_includes_head=True)
     lgd = ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
                     fancybox=True, shadow=True, ncol=5)
     plt.savefig(out + ".png", bbox_extra_artists=(lgd,), bbox_inches='tight')
@@ -44,16 +45,12 @@ def plot(black, redPointsInTime, out, title):
 def plotVoronoi(black, redPointsInTime, out, title):
 
     vor = Voronoi(redPointsInTime[-1])
-    voronoi_plot_2d(vor)
+    fig = voronoi_plot_2d(vor, show_vertices=False)
     # Set up plot
-    fig = plt.figure(figsize=(10, 10))
     fig.add_subplot(111)
-    l, = plt.plot([], [], 'r-')
     plt.grid()
     # split black points into x and y
     black_x, black_y = zip(*black)
-    plt.scatter(black_x, black_y, color='black', s=20)
-
     plt.title(title)
     plt.scatter(black_x, black_y, color='black', s=1)
     plt.xlim([-10, 10])
@@ -61,12 +58,13 @@ def plotVoronoi(black, redPointsInTime, out, title):
     plt.savefig(out + ".png")
 
 
-points = circumference_dist([0, 0], 7, 400)
+points = circumference_dist([2, 3], 5, 401)
+points += square_dist([-5, -5], 3, 200)
 
-Neuron_number = 20
+Neuron_number = 10
 som = {"Gas_Neuronowy": NG,
        "Siec_kohonena": KN}
-iter_number = 8
+iter_number = 5
 for decription, type in som.items():
     map = type(Neuron_number, points)
     redInTime = []
