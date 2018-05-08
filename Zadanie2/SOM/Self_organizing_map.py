@@ -134,3 +134,6 @@ class Self_organizing_map(object):
             ans[x] = _random_point(dim_number_space)
             entry_counter += 1
         return ans
+
+    def getNeurons(self):
+        return self.neurons.values()
