@@ -78,11 +78,12 @@ def quantization_error2(neurons, points, dist_func=Euklides_dist):
         err += dist_func(neuron, tcp)
     return err / len(neurons)
 
-    def random_point(n):
-        """
-        Generete random point in n-dimensional space
-        Returns:
-                n - element tuple of random 32-bit floats
-        """
-        # bounds are temporarily hardcoded to -10,10
-        return tuple(np.random.uniform(low=-10, high=10, size=(n)))
+
+def random_point(n):
+    """
+    Generete random point in n-dimensional space
+    Returns:
+            n - element tuple of random 32-bit floats
+    """
+    # bounds are temporarily hardcoded to -10,10
+    return tuple(np.random.uniform(low=-10, high=10, size=(n)))
