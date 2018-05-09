@@ -20,7 +20,7 @@ results = []
 results.append(["LR", "DEAD_MEAN", "DEAD_STD", "EQ_MIN", "MSQE", "STD"])
 
 set = []
-set.extend(circumference_dist([0, 0], 7, 400))
+set.extend(circumference_dist([-2, -2], 5, 400))
 set.extend(triangle_dist([5, 5], [5, 8], [7, 8], 400))
 
 neuron_number = 20
