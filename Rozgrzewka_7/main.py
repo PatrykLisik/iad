@@ -13,23 +13,8 @@ def Euklides_dist(x1, x2):
     return distance.euclidean(x1, x2)
 
 
-def random_point(n, min=0, max=10):
-    """
-    Generete random point in n-dimensional space
-    Returns:
-            n - element tuple of random 32-bit floats
-    """
-    return np.random.uniform(low=min, high=max, size=(n))
-
-
 def gaussRad(d, sig):
     return (1 / (np.sqrt(2 * math.pi) * sig)) * np.exp(-d**2 / (2 * sig**2))
-
-
-def genNeurons(n):
-    neurons = {}
-    center = random_point(2, 0, 10)
-    weigth = random_point(2, -4, 4)
 
 
 number_of_centers = 4
