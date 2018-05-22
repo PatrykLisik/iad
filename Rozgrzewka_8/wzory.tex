@@ -1,0 +1,88 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Patryk Lisik}
+\title{IAD-wzory}
+\renewcommand*\descriptionlabel[1]{\hspace\leftmargin$#1$}
+\begin{document}
+\maketitle
+\begin{equation}\label{eq_1}
+f(x)=w_0+\sum^c_{i=1}w_ik(||x-c_i||,\sigma )
+\end{equation}
+\begin{description}
+\item[w_i] jest i-tą wagą
+\item[c_i] jest i-tym centrum
+\end{description}
+
+\begin{equation}\label{eq_2}
+k(d,\sigma)=\frac{1}{\sqrt{2\pi}\cdot\sigma }\cdot \exp\left( -\frac{d^2}{2\sigma ^2}\right) 
+\end{equation}
+
+\begin{equation}\label{eq_3}
+Q(P)=\frac{1}{2P} \sum^P_{i=0} \left(f(x_i)-y_i\right) ^2
+\end{equation}
+
+\begin{equation}\label{eq_4}
+w_n(t+1)=w_i(t)-\alpha \frac{\partial}{\partial w_i}Q(w(t))
+\end{equation}
+
+\section{Metoda najmniejszego spadku dla wag}
+
+$$
+\frac{\partial}{\partial w_n}Q(P)=\frac{\partial}{\partial w_n}\frac{1}{2P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma )-y_i\right) ^2
+$$
+
+ze wzoru na pochodną funkcji złożonej $\left(f(g(x))\right)'=f'(g(x))g'(x)$
+dla $n\neq 0$
+$$
+\frac{\partial}{\partial w_n}Q(P)=\frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma )-y_i\right)\cdot w_n
+$$
+zatem
+
+\begin{gather*}   
+\frac{\partial}{\partial w_n}Q(P)=\\
+\begin{cases}
+  w_n(t+1)=w_i(t)-\alpha \frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}			w_ik(||x_i-c_j||,\sigma )-y_i\right)\cdot w_n & \text{dla } 
+  n\in\{1,2\ldots j\}\\      
+  w_n(t+1)=w_i(t)-\alpha \frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}			w_ik(||x_i-c_j||,\sigma )-y_i\right)  & \text{dla } n=0  
+\end{cases}
+\end{gather}
+\section{Metoda najmniejszego spadku dla promienia sąsiedztwa}
+\begin{equation}
+\sigma(t+1)=\sigma(t)-\alpha \frac{\partial}{\partial \sigma}Q(\sigma(t))
+\end{equation}
+
+\begin{equation*}
+\begin{aligned}
+\frac{\partial}{\partial \sigma}Q(P)=
+\frac{\partial}{\partial \sigma}\frac{1}{2P} \sum^P_{i=0}
+	\left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma )-y_i\right) ^2= \\
+\frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1} \left( w_ik(||x_i-c_j||,\sigma )-y_i \right)\cdot\frac{\partial}{\partial \sigma}k(||x_i-c_j||,\sigma ) \right)
+\end{aligned}
+\end{equation}
+
+$$
+\frac{\partial}{\partial \sigma}k(d,\sigma)=\frac{\partial}{\partial \sigma}\frac{1}{\sqrt{2\pi}\cdot\sigma }\cdot \exp\left( -\frac{d^2}{2\sigma ^2}\right) =
+$$
+\\
+\\
+ze wzoru na iloczyn funkcji $(f(x)g(x))'=f'(x)g(x)+f(x)g'(x)$
+
+\begin{equation*}
+\begin{aligned}
+\frac{\partial}{\partial \sigma}k(d,\sigma)=\frac{1}{\sqrt{2\pi}}\left(-\sigma^{-2}\right)\exp\left( -\frac{d^2}{2\sigma ^2}\right) + \frac{1}{\sqrt{2\pi}\cdot\sigma } \exp\left( -\frac{d^2}{2\sigma ^2}\right) (-2\sigma)^{-3}=\\
+-\frac{1}{\sqrt{2\pi}\cdot\sigma }\cdot \exp\left( -\frac{d^2}{2\sigma ^2}\right)\cdot \left(\frac{1}{\sqrt{2\pi}\cdot\sigma} +(2\sigma)^{-3} \right)=
+-k(d,\sigma)\left(\frac{1}{\sqrt{2\pi}\cdot\sigma} +(2\sigma)^{-3} \right)
+\end{aligned}
+\end{equation}
+stąd
+$$
+\frac{\partial}{\partial \sigma}Q(P)=\frac{1}{P} \sum^P_{i=0} \left(w_0-\sum^c_{j=1} \left( w_ik(||x_i-c_j||,\sigma )-y_i \right)\cdot)k(||x_i-c_j||,\sigma )\left(\frac{1}{\sqrt{2\pi}\cdot\sigma} +(2\sigma)^{-3} \right) \right)
+$$
+\end{document}
