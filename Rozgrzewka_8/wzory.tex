@@ -13,7 +13,7 @@
 \begin{document}
 \maketitle
 \begin{equation}\label{eq_1}
-f(x)=w_0+\sum^c_{i=1}w_ik(||x-c_i||,\sigma )
+f(x)=w_0+\sum^c_{i=1}w_ik(||x-c_i||,\sigma_i )
 \end{equation}
 \begin{description}
 \item[w_i] jest i-tą wagą
@@ -29,43 +29,43 @@ Q(P)=\frac{1}{2P} \sum^P_{i=0} \left(f(x_i)-y_i\right) ^2
 \end{equation}
 
 \begin{equation}\label{eq_4}
-w_n(t+1)=w_i(t)-\alpha \frac{\partial}{\partial w_i}Q(w(t))
+w_n(t+1)=w_n(t)-\alpha \frac{\partial}{\partial w_n}Q(w(t))
 \end{equation}
 
 \section{Metoda najmniejszego spadku dla wag}
 
 $$
-\frac{\partial}{\partial w_n}Q(P)=\frac{\partial}{\partial w_n}\frac{1}{2P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma )-y_i\right) ^2
+\frac{\partial}{\partial w_n}Q(P)=\frac{\partial}{\partial w_n}\frac{1}{2P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma_j )-y_i\right) ^2
 $$
 
 ze wzoru na pochodną funkcji złożonej $\left(f(g(x))\right)'=f'(g(x))g'(x)$
 dla $n\neq 0$
 $$
-\frac{\partial}{\partial w_n}Q(P)=\frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma )-y_i\right)\cdot w_n
+\frac{\partial}{\partial w_n}Q(P)=\frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma_j )-y_i\right)\cdot w_n
 $$
 zatem
 
 \begin{gather*}   
 \frac{\partial}{\partial w_n}Q(P)=\\
 \begin{cases}
-  w_n(t+1)=w_i(t)-\alpha \frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}			w_ik(||x_i-c_j||,\sigma )-y_i\right)\cdot w_n & \text{dla } 
+  w_n(t+1)=w_n(t)-\alpha \frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}			w_ik(||x_i-c_j||,\sigma_j )-y_i\right)\cdot w_n & \text{dla } 
   n\in\{1,2\ldots j\}\\      
-  w_n(t+1)=w_i(t)-\alpha \frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}			w_ik(||x_i-c_j||,\sigma )-y_i\right)  & \text{dla } n=0  
+  w_n(t+1)=w_n(t)-\alpha \frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1}			w_ik(||x_i-c_j||,\sigma_j )-y_i\right)  & \text{dla } n=0  
 \end{cases}
-\end{gather}
+\end{gather*}
 \section{Metoda najmniejszego spadku dla promienia sąsiedztwa}
 \begin{equation}
-\sigma(t+1)=\sigma(t)-\alpha \frac{\partial}{\partial \sigma}Q(\sigma(t))
+\sigma_n(t+1)=\sigma_n(t)-\alpha \frac{\partial}{\partial \sigma_n}Q(\sigma(t))
 \end{equation}
 
 \begin{equation*}
 \begin{aligned}
-\frac{\partial}{\partial \sigma}Q(P)=
-\frac{\partial}{\partial \sigma}\frac{1}{2P} \sum^P_{i=0}
-	\left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma )-y_i\right) ^2= \\
-\frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1} \left( w_ik(||x_i-c_j||,\sigma )-y_i \right)\cdot\frac{\partial}{\partial \sigma}k(||x_i-c_j||,\sigma ) \right)
+\frac{\partial}{\partial \sigma_n}Q(P)=
+\frac{\partial}{\partial \sigma_n}\frac{1}{2P} \sum^P_{i=0}
+	\left(w_0+\sum^c_{j=1}w_ik(||x_i-c_j||,\sigma_j )-y_i\right) ^2= \\
+\frac{1}{P} \sum^P_{i=0} \left(w_0+\sum^c_{j=1} \left( w_ik(||x_i-c_j||,\sigma_j )-y_i \right)\cdot\frac{\partial}{\partial \sigma_n}k(||x_i-c_j||,\sigma_j ) \right)
 \end{aligned}
-\end{equation}
+\end{equation*}
 
 $$
 \frac{\partial}{\partial \sigma}k(d,\sigma)=\frac{\partial}{\partial \sigma}\frac{1}{\sqrt{2\pi}\cdot\sigma }\cdot \exp\left( -\frac{d^2}{2\sigma ^2}\right) =
@@ -80,9 +80,9 @@ ze wzoru na iloczyn funkcji $(f(x)g(x))'=f'(x)g(x)+f(x)g'(x)$
 -\frac{1}{\sqrt{2\pi}\cdot\sigma }\cdot \exp\left( -\frac{d^2}{2\sigma ^2}\right)\cdot \left(\frac{1}{\sqrt{2\pi}\cdot\sigma} +(2\sigma)^{-3} \right)=
 -k(d,\sigma)\left(\frac{1}{\sqrt{2\pi}\cdot\sigma} +(2\sigma)^{-3} \right)
 \end{aligned}
-\end{equation}
+\end{equation*}
 stąd
 $$
-\frac{\partial}{\partial \sigma}Q(P)=\frac{1}{P} \sum^P_{i=0} \left(w_0-\sum^c_{j=1} \left( w_ik(||x_i-c_j||,\sigma )-y_i \right)\cdot)k(||x_i-c_j||,\sigma )\left(\frac{1}{\sqrt{2\pi}\cdot\sigma} +(2\sigma)^{-3} \right) \right)
+\frac{\partial}{\partial \sigma_n}Q(P)=\frac{1}{P} \sum^P_{i=0} \left(\left[ w_0-\sum^c_{j=1} \left( w_ik(||x_i-c_j||,\sigma_j )-y_i\right) \right]\left[ k(||x_i-c_n||,\sigma_n )\left(\frac{1}{\sqrt{2\pi}\cdot\sigma_n} +(2\sigma_n)^{-3} \right)\right] \right)
 $$
 \end{document}
