@@ -4,7 +4,7 @@ from SOM.Neuron_gas import Neuron_gas as NG
 from SOM.K_means import K_menas as KM
 from points_distributions import cirlce_dist, square_dist
 from points_distributions import triangle_dist, circumference_dist
-from SOM.functions import quantization_error2 as QErr
+from SOM.functions import quantization_error3 as QErr
 from SOM.functions import Euklides_dist as E_dist
 import numpy as np
 from matplotlib.pyplot import cm

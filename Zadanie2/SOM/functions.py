@@ -79,6 +79,23 @@ def quantization_error2(neurons, points, dist_func=Euklides_dist):
     return err / len(neurons)
 
 
+def quantization_error3(neurons, points, dist_func=Euklides_dist):
+    """
+    Args:
+        Neurons: list of neuron posion in space
+        points: list of point posion in space
+        dist_func: callable object that compute distance in space
+    Return:
+        Mean of distances from every neuron to corresponding closest point
+    """
+    err = 0
+    for point in points:
+        # find the closest neuron
+        tcn = min(neurons, key=lambda n: dist_func(point, n))
+        err += dist_func(point, tcn)
+    return err / len(neurons)
+
+
 def random_point(n):
     """
     Generete random point in n-dimensional space
