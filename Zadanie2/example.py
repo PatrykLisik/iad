@@ -1,10 +1,13 @@
 from SOM.Neuron_gas import Neuron_gas
 from SOM.Kohonen_network import Kohonen_network
-from SOM.functions import RNF, GNF, Euklides_dist, quantization_error2
+from SOM.functions import RNF, GNF, Euklides_dist, quantization_error3
 from points_distributions import circumference_dist, triangle_dist, cirlce_dist
 from points_distributions import square_dist
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import numpy as np
+from SOM.K_means import K_menas
+import copy
 
 
 def animate(num, data, line, scat, line_sw):
@@ -93,32 +96,56 @@ def point_set_up_3():
     return aprox_set
 
 
+def deadNumber(data):
+    data_trans = np.swapaxes(data, 1, 0)
+    ans = 0
+    # print("data", data)
+    for neuron_history in data_trans:
+        # test if all are the same
+        ans += int((neuron_history[1:] == neuron_history[:-1]).all())
+    return ans
+
+
 # aprox_set = [point_set_up_1(), point_set_up_2(), point_set_up_3()]
 # aprox_set = [point_set_up_3()]
 aprox_set = [circumference_dist([0, 0], 7, 600)]
 R = 3
 for set_nr, set in enumerate(aprox_set):
-    for points_number in range(2, 21, 2):
+    for points_number in [12, 18, 20]:
         kn = Kohonen_network(points_number, set)
         ng = Neuron_gas(points_number, set)
+        km = K_menas(points_number, set)
         neuronPosList_koh = []
         neuronPosList_gas = []
+        neuronPosList_km = []
         Qerr_koh = []
         Qerr_gas = []
+        Qerr_Km = []
         print("Compute")
-        for _ in range(30):
+        for i in range(7):
+            print("IERT: ", i)
             # kohonen_network
             values_kn = list(kn.neurons.values())
             neuronPosList_koh.append(values_kn)
-            Qerr_koh.append(quantization_error2(values_kn, set, Euklides_dist))
+            Qerr_koh.append(quantization_error3(values_kn, set, Euklides_dist))
             kn.iter_once()
             # neuron gas
             values_ng = list(ng.neurons.values())
             neuronPosList_gas.append(values_ng)
-            Qerr_gas.append(quantization_error2(values_ng, set, Euklides_dist))
+            Qerr_gas.append(quantization_error3(values_ng, set, Euklides_dist))
             ng.iter_once()
             # print(values)
-        print("Plot")
+
+            values_km = copy.deepcopy(list(km.getNeurons()))
+            neuronPosList_km.append(values_km)
+            Qerr_Km.append(quantization_error3(values_km, set, Euklides_dist))
+            km.iter_once()
+        print("{} neuron".format(points_number))
+        print("DEAD KN", deadNumber(neuronPosList_koh))
+        print("DEAD NG", deadNumber(neuronPosList_gas))
+        print("DEAD KM", km.dead_neurons)
+        print(neuronPosList_km, file=open(
+            "Kmeans{}.txt".format(points_number), "w"))
         plotPointsOfDict(set, neuronPosList_koh, True,
                          "koh-GNF-Points={0}:set={1}".
                          format(points_number, set_nr),
@@ -127,9 +154,16 @@ for set_nr, set in enumerate(aprox_set):
                          "gas-GNF-Points={0}:set={1}:R={2}".
                          format(points_number, set_nr, R),
                          "Gas neuronowy - {} punktów".format(points_number))
+        plotPointsOfDict(set, neuronPosList_km, False,
+                         "k_means-GNF-Points={0}:set={1}:R={2}".
+                         format(points_number, set_nr, R),
+                         "K-Srednie - {} punktów".format(points_number))
         plotQError(Qerr_gas, "Qerr2-gas-GNF-Points={0}:set={1}:R={2}".
                    format(points_number, set_nr, R),
                    "Gas neuronowy - bład - {} punktów".format(points_number))
         plotQError(Qerr_koh, "Qerr2-koh-GNF-Points={0}:set={1}:R={2}".
                    format(points_number, set_nr, R),
                    "Sieć Kohonena - bład - {} punktów".format(points_number))
+        plotQError(Qerr_Km, "Qerr2-kmeans-Points={0}:set={1}:R={2}".
+                   format(points_number, set_nr, R),
+                   "K-Srednie - bład - {} punktów".format(points_number))
