@@ -54,7 +54,7 @@ class K_menas():
         for old_pos, points in self.neurons.items():
             # Don't do anything with tired neurons
             if(len(points) == 0):
-                print("BREAK:::", old_pos)
+                #print("BREAK:::", old_pos)
                 dead_set.add(old_pos)
                 continue
             # compute new posion
@@ -72,4 +72,8 @@ class K_menas():
         self.move_centers()
 
     def getNeurons(self):
-        return self.neurons.keys()
+        ret = []
+        for p in list(self.neurons.keys()):
+            pp = list(p)
+            ret.append(pp)
+        return ret
