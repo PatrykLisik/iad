@@ -1,6 +1,7 @@
 from .functions import random_point
 from .functions import Euklides_dist as E_dist
 import numpy as np
+from collections import OrderedDict
 
 
 class K_menas():
@@ -35,7 +36,7 @@ class K_menas():
         ans = {}
         for _ in range(n):
             ans[random_point(2)] = []
-        return ans
+        return OrderedDict(ans)
 
     def match_points_to_neurons(self):
         neur = list(self.neurons.keys())
@@ -61,10 +62,9 @@ class K_menas():
             x, y = zip(*points)
             avg_x = np.mean(x)
             avg_y = np.mean(y)
-            # delete old neuron
-            self.neurons.pop(old_pos)
-            # add new
-            self.neurons[(avg_x, avg_y)] = []
+            # replace old neuron with new new without losing order
+            self.neurons = OrderedDict([((avg_x, avg_y), []) if k == old_pos else (
+                k, v) for k, v in self.neurons.items()])
         self.dead_neurons = min(len(dead_set), self.dead_neurons)
 
     def iter_once(self):
