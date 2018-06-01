@@ -1,6 +1,7 @@
 from SOM.Neuron_gas import Neuron_gas
 from SOM.Kohonen_network import Kohonen_network
-from SOM.functions import RNF, GNF, Euklides_dist, quantization_error2
+from SOM.functions import RNF, GNF, Euklides_dist
+from SOM.functions import quantization_error3 as q_err
 from points_distributions import circumference_dist, triangle_dist, cirlce_dist
 from points_distributions import square_dist
 import csv
@@ -31,8 +32,8 @@ for lr, tired in zip(lrs, tireds):
         for _ in range(20):
             kn.iter_once()
             gn.iter_once()
-        QErr_koh.append(quantization_error2(kn.neurons.values(), set))
-        QErr_gas.append(quantization_error2(gn.neurons.values(), set))
+        QErr_koh.append(q_err(kn.neurons.values(), set))
+        QErr_gas.append(q_err(gn.neurons.values(), set))
     kn_errMean = np.mean(QErr_koh)
     gn_errMean = np.mean(QErr_gas)
     kn_STD = np.std(QErr_koh, ddof=1)

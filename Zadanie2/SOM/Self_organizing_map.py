@@ -106,11 +106,11 @@ class Self_organizing_map(object):
 
     def _updateLr(self):
         """
-        Private method that decrese learning rate
+        Private method that decrese neighborhood radius
         """
 
         # This migth be suboptimal function
-        self.lr /= 1.05
+        self.R /= 1.05
 
     def _genreteStartNeurons(self, entrance_number, dim_number_net,
                              dim_number_space):
