@@ -189,3 +189,13 @@ def voronoi_finite_polygons_2d(vor, radius=None):
         new_regions.append(new_region.tolist())
 
     return new_regions, np.asarray(new_vertices)
+
+
+def deadNumber(data):
+    data_trans = np.swapaxes(data, 1, 0)
+    ans = 0
+    # print("data", data)
+    for neuron_history in data_trans:
+        # test if all are the same
+        ans += int((neuron_history[1:] == neuron_history[:-1]).all())
+    return ans
