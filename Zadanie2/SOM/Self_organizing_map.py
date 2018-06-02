@@ -136,4 +136,4 @@ class Self_organizing_map(object):
         return ans
 
     def getNeurons(self):
-        return self.neurons.values()
+        return list(self.neurons.values())
