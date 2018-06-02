@@ -1,19 +1,10 @@
-from SOM.K_means import K_menas as KM
+from SOM.K_means import K_means as KM
 from SOM.functions import quantization_error2
 from points_distributions import circumference_dist, triangle_dist
 import csv
 import numpy as np
 import copy
-
-
-def deadNumber(data):
-    data_trans = np.swapaxes(data, 1, 0)
-    ans = 0
-    # print("data", data)
-    for neuron_history in data_trans:
-        # test if all are the same
-        ans += int((neuron_history[1:] == neuron_history[:-1]).all())
-    return ans
+from SOM.functions import deadNumber
 
 
 results = []
