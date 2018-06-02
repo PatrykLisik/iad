@@ -6,7 +6,7 @@ from points_distributions import square_dist
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
-from SOM.K_means import K_menas
+from SOM.K_means import K_means
 import copy
 
 
@@ -114,7 +114,7 @@ for set_nr, set in enumerate(aprox_set):
     for points_number in [12, 18, 20]:
         kn = Kohonen_network(points_number, set)
         ng = Neuron_gas(points_number, set)
-        km = K_menas(points_number, set)
+        km = K_means(points_number, set)
         neuronPosList_koh = []
         neuronPosList_gas = []
         neuronPosList_km = []
