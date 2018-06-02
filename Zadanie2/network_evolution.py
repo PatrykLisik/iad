@@ -1,7 +1,7 @@
 from SOM.Neuron_gas import Neuron_gas as NG
 from SOM.Kohonen_network import Kohonen_network as KN
-from SOM.K_means import K_menas as KM
-from points_distributions import circumference_dist
+from SOM.K_means import K_means as KM
+from points_distributions import points as data_set
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 import numpy as np
@@ -60,7 +60,7 @@ def plotVoronoi(black, redPointsInTime, out, title):
         plt.fill(*zip(*polygon), alpha=0.4)
 
     for p in red_at_last:
-        plt.scatter(p[0], p[1], color='red', s=5)
+        plt.scatter(p[0], p[1], color='red', s=10)
 
     plt.grid()
     # split black points into x and y
@@ -72,20 +72,20 @@ def plotVoronoi(black, redPointsInTime, out, title):
     plt.savefig(out + ".png")
 
 
-points = circumference_dist([0, 0], 8, 601)
-# points += square_dist([-5, -5], 3, 200)
-
 Neuron_number = 10
 som = {"Gas_Neuronowy": NG,
        "Siec_kohonena": KN,
        "k-Srednie": KM}
-iter_number = 5
-for decription, SOM_type in som.items():
-    map = SOM_type(Neuron_number, points)
-    redInTime = []
-    for _ in range(iter_number):
-        neuron_pos = list(map.getNeurons())
-        redInTime.append(neuron_pos)
-        map.iter_once()
-    plotVoronoi(points, redInTime, decription + "_vor", decription)
-    plot(points, redInTime, decription + "_in_time", decription)
+iter_number = 10
+for som_name, SOM_type in som.items():
+    for points_name, points in data_set.items():
+        map = SOM_type(Neuron_number, points)
+        redInTime = []
+        for _ in range(iter_number):
+            neuron_pos = list(map.getNeurons())
+            redInTime.append(neuron_pos)
+            map.iter_once()
+        plotVoronoi(points, redInTime, "./network_evo/" +
+                    som_name + "_" + points_name + "_vor", som_name)
+        plot(points, redInTime, "./network_evo/" +
+             som_name + "_" + points_name + "_in_time", som_name)

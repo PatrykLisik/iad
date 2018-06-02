@@ -48,3 +48,13 @@ def square_dist(center, radius, amount):
         randY = np.random.uniform(centerY - radius, centerY + radius)
         ans.append([randX, randY])
     return ans
+
+
+# Predefined points sets
+points = {"circumference": circumference_dist([0, 0], 8, 400),
+          "cirlce": cirlce_dist([0, 0], 8, 500),
+          "square": square_dist([0, 0], 6, 600)}
+two = []
+two.extend(circumference_dist([5, 5], 4, 400))
+two.extend(triangle_dist([-8, -8], [-9, 0], [5, -5], 400))
+points["circumference_square"] = two

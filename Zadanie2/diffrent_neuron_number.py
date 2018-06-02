@@ -1,9 +1,8 @@
 import matplotlib.pyplot as plt
 from SOM.Kohonen_network import Kohonen_network as KN
 from SOM.Neuron_gas import Neuron_gas as NG
-from SOM.K_means import K_menas as KM
-from points_distributions import cirlce_dist, square_dist
-from points_distributions import triangle_dist, circumference_dist
+from SOM.K_means import K_means as KM
+from points_distributions import points
 from SOM.functions import quantization_error3 as QErr
 from SOM.functions import Euklides_dist as E_dist
 import numpy as np
@@ -32,13 +31,7 @@ def plotQError(y_tab, out, title):
 
 
 # set = circumference_dist([-4, 4], 3, 100)
-obj = {"circumference": circumference_dist([0, 0], 7, 400),
-       "cirlce": cirlce_dist([0, 0], 8, 500),
-       "square": square_dist([0, 0], 5, 600)}
-two = []
-two.extend(circumference_dist([3, 3], 3, 400))
-two.extend(triangle_dist([0, 0], [0, 4], [-4, 0], 400))
-obj["circumference_square"] = two
+obj = points
 
 networks = {KN: "Siec_Kohonena",
             NG: "Gas_neuronowy",
@@ -57,4 +50,4 @@ for desc, set in obj.items():
                 q_errs.append(err)
                 net.iter_once()
             data.append(q_errs)
-        plotQError(data, desc + "_" + name, name)
+        plotQError(data, "./diffrent_neuron_number/" + desc + "_" + name, name)
