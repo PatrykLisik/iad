@@ -96,14 +96,13 @@ def quantization_error3(neurons, points, dist_func=Euklides_dist):
     return err / len(neurons)
 
 
-def random_point(n):
+def random_point(n, low=-10, high=10):
     """
     Generete random point in n-dimensional space
     Returns:
             n - element tuple of random 32-bit floats
     """
-    # bounds are temporarily hardcoded to -10,10
-    return tuple(np.random.uniform(low=-10, high=10, size=(n)))
+    return tuple(np.random.uniform(low=low, high=high, size=(n)))
 
 
 def voronoi_finite_polygons_2d(vor, radius=None):
