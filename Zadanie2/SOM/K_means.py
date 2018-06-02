@@ -4,7 +4,7 @@ import numpy as np
 from collections import OrderedDict
 
 
-class K_menas():
+class K_means():
     """Implementation of k-means"""
 
     def __init__(self, points_number, points_to_aprox, neighborhood_radius=2,
