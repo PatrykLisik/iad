@@ -8,10 +8,10 @@ class Lin_layer():
         self.lr = lr
 
     def query(self, input):
-        return list((numpy.dot(self.weigths, input) + self.bias)[0])
+        return (numpy.dot(self.weigths, input) + self.bias)[0]
 
-    def train(self, input, layer_out, target):
-        output_errors = target - layer_out
+    def train(self, input, layer_out, output_errors):
+
         self.weigths += (self.lr * numpy.dot(output_errors,
                                              numpy.transpose(input)))
         self.bias += self.lr * output_errors
