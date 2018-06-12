@@ -45,7 +45,7 @@ class RBF():
     def set_up_centers_from_vec(self, input):
         """
         Set up centers as random vectros from X
-        input: matrix of diSmensions n x input_number
+        input: matrix of dimensions n x input_number
         """
         X = np.array(input)
         rnd_idx = np.random.permutation(X.shape[0])[:self.h_nodes]
