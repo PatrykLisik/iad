@@ -48,15 +48,12 @@ class RBF():
         Train output layer
         """
         rbf_out = self.rbf.query(input)
-        print(rbf_out)
         net_out = self.out.query(rbf_out)
 
         output_errors = target - net_out
-        print("net_out", net_out)
-        print("output_errors", output_errors)
         self.out.train(rbf_out, net_out, output_errors)
 
-    def set_up_centers_from_vec(self, input):
+    def set_up_centers_from_vec_rand(self, input):
         """
         Set up centers as random vectros from X
         input: matrix of dimensions n x input_number
@@ -64,6 +61,24 @@ class RBF():
         X = np.array(input)
         rnd_idx = np.random.permutation(X.shape[0])[:self.h_nodes]
         centers = [X[i, :] for i in rnd_idx]
+        self.rbf.set_up_centers(centers)
+
+    def set_up_centers_from_vec(self, input):
+        """
+        Set up centers as random vectros from X
+        input: matrix of dimensions n x input_number
+        """
+        X = np.array(input)
+        in_len = len(input)
+        step = int(np.floor(in_len / self.h_nodes))
+        step += 1
+        centers = input[::step]
+        """print("in_len: ", in_len)
+        print("step: ", step)
+        print("len cetnters", len(centers))
+        print("self.h_nodes", self.h_nodes)"""
+        print("step: ", step)
+        print(centers)
         self.rbf.set_up_centers(centers)
 
     def set_up_centers_gas(self, input):

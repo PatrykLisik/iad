@@ -118,9 +118,8 @@ sigmas = [[0.1, 0.01], [0.5, 0.5], [8, 10]]
 
 for sig in sigmas:
     # nnworks to plot
-    for h_nodes in [21, 36]:
+    for h_nodes in [21, 41]:
         nnworks = {}
-        print(h_nodes)
         hidden_nodes = h_nodes
         sig_range = sig
         nn = RBF(input_nodes, hidden_nodes, output_nodes,
