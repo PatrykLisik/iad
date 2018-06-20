@@ -121,7 +121,7 @@ for i in range(number_of_iteration):
         print("error_test: ", error_test)
         print("hidden_nodes: ", hidden_nodes)
     for j in range(len(train_input_list)):
-        nn.train(train_input_list[j], train_target_list[j])
+        nn.train_lin(train_input_list[j], train_target_list[j])
     if i in iter_to_plot:
         n = copy.deepcopy(nn)
         networks[i] = n
