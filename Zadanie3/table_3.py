@@ -56,7 +56,7 @@ for h_nodes in range(1, 42, 5):
     hidden_nodes = h_nodes
     test_err = []
     train_err = []
-    for _ in range(10):
+    for _ in range(100):
         nn = RBF(input_nodes, hidden_nodes, output_nodes,
                  learningrate, c_range, sig_range)
         nn.set_up_centers_from_vec(train_input_list)

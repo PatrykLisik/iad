@@ -12,7 +12,8 @@ class RBF_layer():
         return [neuron.query(input)for neuron in self.rbf]
 
     def query_one(self, input, rbf_index):
-        assert rbf_index < len(self.bias_rbf)
+        assert rbf_index < len(self.rbf)
+        return [self.rbf[rbf_index].query(input)]
 
     def train(self, input, outputs, output_errors):
         for neuron, output, error in zip(self.rbf, outputs, output_errors):

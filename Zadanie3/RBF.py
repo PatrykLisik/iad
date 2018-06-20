@@ -1,7 +1,16 @@
+import inspect
+import os
+import sys
+
 import numpy as np
 
 from Lin_layer import Lin_layer
 from RBF_layer import RBF_layer
+
+currentdir = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
 
 
 class RBF():
@@ -15,6 +24,9 @@ class RBF():
     def query(self, input):
         rbf_out = self.rbf.query(input)
         return self.out.query(rbf_out)[0]
+
+    def query_one(self, input, neuron_index):
+        return self.rbf.query_one(input, neuron_index)[0] * self.out.weigths[0][neuron_index]
 
     def train(self, input, target):
         """
@@ -36,10 +48,12 @@ class RBF():
         Train output layer
         """
         rbf_out = self.rbf.query(input)
+        print(rbf_out)
         net_out = self.out.query(rbf_out)
 
         output_errors = target - net_out
-
+        print("net_out", net_out)
+        print("output_errors", output_errors)
         self.out.train(rbf_out, net_out, output_errors)
 
     def set_up_centers_from_vec(self, input):
@@ -51,3 +65,7 @@ class RBF():
         rnd_idx = np.random.permutation(X.shape[0])[:self.h_nodes]
         centers = [X[i, :] for i in rnd_idx]
         self.rbf.set_up_centers(centers)
+
+    def set_up_centers_gas(self, input):
+        from Zadanie2.SOM import Neuron_gas
+        pass
