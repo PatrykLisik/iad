@@ -1,12 +1,13 @@
-from SOM.Neuron_gas import Neuron_gas as NG
-from SOM.Kohonen_network import Kohonen_network as KN
-from SOM.K_means import K_means as KM
-from points_distributions import points as data_set
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import cm
 import numpy as np
+from matplotlib.pyplot import cm
 from scipy.spatial import Voronoi
+
+from points_distributions import points as data_set
 from SOM.functions import voronoi_finite_polygons_2d
+from SOM.K_means import K_means as KM
+from SOM.Kohonen_network import Kohonen_network as KN
+from SOM.Neuron_gas import Neuron_gas as NG
 
 
 def plot(black, redPointsInTime, out, title):
@@ -46,7 +47,7 @@ def plot(black, redPointsInTime, out, title):
     plt.savefig(out + ".png", bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 
-def plotVoronoi(black, redPointsInTime, out, title):
+def plotVoronoi(black, redPointsInTime, out, title, koh_line_swt):
 
     red_at_last = list(redPointsInTime[-1])
     vor = Voronoi(red_at_last)
@@ -58,6 +59,15 @@ def plotVoronoi(black, redPointsInTime, out, title):
     for region in regions:
         polygon = vertices[region]
         plt.fill(*zip(*polygon), alpha=0.4)
+    # plot lines beteeen kononen network
+    if koh_line_swt:
+        print("koh plt")
+        red_iter = iter(red_at_last)
+        red_iter_next = iter(red_at_last)
+        next(red_iter_next)
+        for point, point_next in zip(red_iter, red_iter_next):
+            plt.plot([point[0], point_next[0]], [
+                     point[1], point_next[1]], 'r--')
 
     for p in red_at_last:
         plt.scatter(p[0], p[1], color='red', s=10)
@@ -85,7 +95,11 @@ for som_name, SOM_type in som.items():
             neuron_pos = list(map.getNeurons())
             redInTime.append(neuron_pos)
             map.iter_once()
+        koh = False
+        if som_name == "Siec_kohonena":
+            koh = True
+            print("kon " + som_name)
         plotVoronoi(points, redInTime, "./network_evo/" +
-                    som_name + "_" + points_name + "_vor", som_name)
+                    som_name + "_" + points_name + "_vor", som_name, koh)
         plot(points, redInTime, "./network_evo/" +
              som_name + "_" + points_name + "_in_time", som_name)
