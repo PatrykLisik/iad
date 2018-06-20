@@ -1,9 +1,10 @@
-from .Fixed_size_queue import Fixed_size_queue
-import random
-from .functions import random_point as _random_point
 import itertools
 import math
+import random
 import sys
+
+from .Fixed_size_queue import Fixed_size_queue
+from .functions import random_point as _random_point
 
 
 class Self_organizing_map(object):
@@ -110,7 +111,7 @@ class Self_organizing_map(object):
         """
 
         # This migth be suboptimal function
-        self.R /= 1.05
+        self.R /= 1.3
 
     def _genreteStartNeurons(self, entrance_number, dim_number_net,
                              dim_number_space):
