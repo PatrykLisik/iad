@@ -10,6 +10,10 @@ class RBF_neuron():
         self.sig = random_point(1, sig_range[0], sig_range[1])
         self.lr = lr
 
+    def set_sig(self, closest):
+        self.sig = (Euklides_dist(self.c, closest) / 2) * 15
+        print("sig: ", self.sig)
+
     def query(self, x):
         distance = Euklides_dist(self.c, x)
         return gaussRad(distance, self.sig)

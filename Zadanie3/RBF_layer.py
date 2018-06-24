@@ -1,3 +1,4 @@
+from functions import Euklides_dist
 from RBF_neuron import RBF_neuron
 
 
@@ -7,6 +8,10 @@ class RBF_layer():
         self.rbf = [RBF_neuron(input_number, lr, c_range, sig_range)
                     for _ in range(output_number)]
         self.lr = lr
+        centers = [n.c[0] for n in self.rbf]
+        for n in self.rbf:
+            centers.sort(key=lambda p: Euklides_dist(n.c, p))
+            n.set_sig(centers[1])
 
     def query(self, input):
         return [neuron.query(input)for neuron in self.rbf]

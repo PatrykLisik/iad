@@ -23,7 +23,7 @@ class RBF():
 
     def query(self, input):
         rbf_out = self.rbf.query(input)
-        return self.out.query(rbf_out)[0]
+        return self.out.query(rbf_out)
 
     def query_one(self, input, neuron_index):
         return self.rbf.query_one(input, neuron_index)[0] * self.out.weigths[0][neuron_index]
