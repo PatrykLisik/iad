@@ -11,8 +11,13 @@ class RBF_neuron():
         self.lr = lr
 
     def set_sig(self, closest):
-        self.sig = (Euklides_dist(self.c, closest) / 2) * 15
-        print("sig: ", self.sig)
+        new_sig = np.array([(Euklides_dist(self.c, closest) / 2)]) * 5
+        #new_sig = np.array([(1 / Euklides_dist(self.c, closest))])
+        print("prev sig", self.sig)
+        #self.sig = new_sig
+        if new_sig > 0.06:
+            self.sig = new_sig
+            print("new sig: ", new_sig)
 
     def query(self, x):
         distance = Euklides_dist(self.c, x)

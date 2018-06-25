@@ -27,23 +27,6 @@ def getData(intput):
     return outX, outY
 
 
-# train set
-train_input_list = []
-train_target_list = []
-
-intput_file = open(sys.argv[1], "r+")
-train_input_list, train_target_list = getData(intput_file)
-intput_file.close()
-
-# test set
-test_input_list = []
-test_target_list = []
-
-intput_file = open(sys.argv[2], "r+")
-test_input_list, test_target_list = getData(intput_file)
-intput_file.close()
-
-
 def flat_list(d_list):
     return list(np.array(d_list).flat)
 
@@ -67,15 +50,15 @@ def plotChart(train_x, train_y, test_x, test_y, func_arry, title):
     # Plot given networks
     func_x = np.arange(min(train_x) - 1, max(train_x) + 1, 0.001)
     colors = iter(cm.rainbow(np.linspace(0, 1, len(func_arry))))
-    for i, nn in func_arry.items():
-        func_y = []
-        for i in func_x:
-            func_y.append(nn.query([i]))
-        ax.plot(func_x, func_y, label="Epoki nauki {0}".format(i),
-                color=next(colors))
+    for iter_num, nn in func_arry.items():
+        print("plot: ", iter_num)
+        func_y = [nn.query([x])for x in func_x]
+        plt.plot(func_x, func_y, label="Epoki nauki {}".format(iter_num),
+                 color=next(colors))
 
     plt.grid()
     plt.title(title)
+    plt.ylim([-8, 4])
     # Legend
     plt.legend(loc='upper center',
                ncol=3, fancybox=True, shadow=True)
@@ -105,15 +88,16 @@ iter_to_plot = np.linspace(0, number_of_iteration, 6)
 
 
 input_nodes = 1
-hidden_nodes = 11
+hidden_nodes = 41
 output_nodes = 1
 learningrate = 0.01
 c_range = [min(train_input_list), max(train_input_list)]
-sig_range = [0.5, 0.5]
+sig_range = [1, 1.1]
 
 nn = RBF(input_nodes, hidden_nodes, output_nodes,
          learningrate, c_range, sig_range)
-nn.set_up_centers_from_vec(train_input_list)
+nn.set_up_centers_from_vec_rand(train_input_list)
+nn.rbf.sigmas_from_center()
 
 for i in range(number_of_iteration):
     f = nn.query
@@ -139,9 +123,10 @@ for i in range(number_of_iteration):
         n = copy.deepcopy(nn)
         nnworks[i] = n
 
+sig_range = "center dist * 15"
 plotChart(train_input_list, train_target_list,
           test_input_list, test_target_list,
           nnworks,
-          "Stany pośrednie: plik:{1}, Epoki nauki:{0} Neurony: {2}  sig_range: {3} "
+          "Stany pośrednie: plik: {1}, Epoki nauki: {0} Neurony: {2} sig: {3} "
           .format(number_of_iteration, str(sys.argv[1]),
                   hidden_nodes, sig_range))

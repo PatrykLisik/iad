@@ -118,13 +118,13 @@ sigmas = [[0.1, 0.01], [0.5, 0.5], [8, 10]]
 
 for sig in sigmas:
     # nnworks to plot
-    for h_nodes in [21, 41]:
+    for h_nodes in [21]:
         nnworks = {}
         hidden_nodes = h_nodes
         sig_range = sig
         nn = RBF(input_nodes, hidden_nodes, output_nodes,
                  learningrate, c_range, sig_range)
-        nn.set_up_centers_from_vec(train_input_list)
+        nn.set_up_centers_from_vec(copy.deepcopy(train_input_list))
 
         for i in range(number_of_iteration):
             f = nn.query
@@ -133,10 +133,9 @@ for sig in sigmas:
 
         n = copy.deepcopy(nn)
         nnworks[hidden_nodes] = n
-
-        plotChart(train_input_list, train_target_list,
-                  test_input_list, test_target_list,
-                  nnworks,
-                  "Ilosc_neurnow: plik:{1}, Epoki nauki:{0} Neurony: {2} sig_range: {3} "
-                  .format(number_of_iteration, str(sys.argv[1]),
-                          hidden_nodes, sig_range))
+    plotChart(train_input_list, train_target_list,
+              test_input_list, test_target_list,
+              nnworks,
+              "Ilosc_neurnow: plik:{1}, Epoki nauki:{0} Neurony: {2} sig: {3} "
+              .format(number_of_iteration, str(sys.argv[1]),
+                      hidden_nodes, sig_range))

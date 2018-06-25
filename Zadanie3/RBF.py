@@ -1,3 +1,4 @@
+import copy
 import inspect
 import os
 import sys
@@ -63,22 +64,23 @@ class RBF():
         centers = [X[i, :] for i in rnd_idx]
         self.rbf.set_up_centers(centers)
 
-    def set_up_centers_from_vec(self, input):
+    def set_up_centers_from_vec(self, inp):
         """
         Set up centers as random vectros from X
         input: matrix of dimensions n x input_number
         """
-        X = np.array(input)
+        input = copy.deepcopy(inp)
         in_len = len(input)
         step = int(np.floor(in_len / self.h_nodes))
         step += 1
+        input.sort()
         centers = input[::step]
-        """print("in_len: ", in_len)
-        print("step: ", step)
-        print("len cetnters", len(centers))
-        print("self.h_nodes", self.h_nodes)"""
-        print("step: ", step)
-        print(centers)
+        #print("in_len: ", in_len)
+        #print("step: ", step)
+        #print("len cetnters", len(centers))
+        #print("self.h_nodes", self.h_nodes)
+        #print("step: ", step)
+        # print(centers)
         self.rbf.set_up_centers(centers)
 
     def set_up_centers_gas(self, input):

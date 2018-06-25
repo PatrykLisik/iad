@@ -8,10 +8,6 @@ class RBF_layer():
         self.rbf = [RBF_neuron(input_number, lr, c_range, sig_range)
                     for _ in range(output_number)]
         self.lr = lr
-        centers = [n.c[0] for n in self.rbf]
-        for n in self.rbf:
-            centers.sort(key=lambda p: Euklides_dist(n.c, p))
-            n.set_sig(centers[1])
 
     def query(self, input):
         return [neuron.query(input)for neuron in self.rbf]
@@ -27,6 +23,17 @@ class RBF_layer():
             self.bias_rbf += self.lr * err
 
     def set_up_centers(self, centers):
+        # print("len(centers)", len(centers))
+        # print("len(self.rbf", len(self.rbf))
         assert len(centers) == len(self.rbf)
         for c, rbf in zip(centers, self.rbf):
             rbf.c = c
+
+    def sigmas_from_center(self):
+        centers = [n.c[0] for n in self.rbf]
+        for n in self.rbf:
+            centers.sort(key=lambda p: Euklides_dist(n.c, p))
+            # print("current c", n.c)
+            # print("set c", centers[1])
+            # print("Centers: ", centers)
+            n.set_sig(centers[1])
