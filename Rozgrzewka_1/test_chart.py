@@ -11,7 +11,7 @@ plt.xlim([-3, 3])
 plt.ylim([-0.5, 1.5])
 
 plt.grid()
-plt.title("Rozgrzewka 1")
+plt.title("Warm up 1")
 
 # points
 PointsX = [-0.2, 0.4, 0.6, 1.2, 1.9, 0.5]
@@ -32,5 +32,5 @@ legend = plt.legend(loc='upper center',
 
 # Put a nicer background color on the legend.
 legend.get_frame().set_facecolor('#00FFCC')
-plt.savefig("wykres.png")
+plt.savefig("warm_up.png")
 # test test
