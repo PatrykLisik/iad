@@ -61,4 +61,4 @@ The whole gradient looks like this
 Script plot_show_learn.py generates chart with 5 given points and curves after some numbers of learning epoch. After every iteration curve sticks closer and closer to points.
 
 
-![alt text](https://github.com/PatrykLisik/iad/blob/master/Perceptron/show_learn.png "Chart 1")
+![show learn](show_learn.png)
