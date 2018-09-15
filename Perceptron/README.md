@@ -61,4 +61,4 @@ The whole gradient looks like this
 Script solv.py generates chart with 5 given points and curves after some numbers of learning epoch. After every iteration curve sticks closer and closer to points.
 
 
-![alt text](https://github.com/PatrykLisik/iad/blob/master/Rozgrzewka_2/chart1.png "Chart 1")
+![alt text](https://github.com/PatrykLisik/iad/blob/master/Perceptron/show_learn.png "Chart 1")
